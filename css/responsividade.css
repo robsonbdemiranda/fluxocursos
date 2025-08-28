@@ -1,0 +1,269 @@
+/* Home */
+
+@media (max-width: 1438px){
+    .home-cursos{
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .home-icones-cursos{
+        width: 280px;
+        margin: 20px;
+    }
+
+    .diferenciais-home{
+        justify-content: center;
+    }
+
+    .icones-diferenciais-home{
+        width: 360px;
+    }
+}
+
+@media (max-width: 860px){
+    .header-mobile{
+        display: inline-block;
+    }
+    .topo-todo{
+        display: none;
+    }
+    .topo{
+        display: none;
+    }
+
+    .redes-mobile{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .redes-mobile img{
+        margin: 0px 8px;
+    }
+
+    .redes-mobile{
+        background-color: #DD2210;
+    }
+
+
+    .rodape{
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .texto-rodape{
+        width: 100%;
+        margin: 10px 0px;
+    }
+    .texto-rodape h4{
+        text-align: center;
+    }
+    .texto-rodape p{
+        text-align: center;
+    }
+}
+
+
+/* A FLuxo */
+
+@media (max-width: 1024px){
+    .container.theme-showcase.conteudo-maior{
+        display: none;
+    }
+
+    .accordion-mobile{
+        display: inline-block;
+    }
+}
+
+/* Equipe */
+
+@media (max-width: 1440px){
+    .equipe{
+        justify-content: center;
+    }
+}
+
+/* Cursos */
+
+@media (max-width: 1440px){
+    .area-cursos{
+        flex-wrap: wrap;
+    }
+    .cursos{
+        width: 270px;
+        margin: 15px 25px;
+    }
+}
+
+
+/* Contato */
+
+@media (max-width: 1024px){
+    .contato-todo{
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+    }
+
+    .contato-1{
+        width: 100%;
+        margin: 0;
+        margin-top: 20px;
+    }
+    
+    .contato-2{
+        width: 100%;
+        margin: 0;
+    }
+
+    .campo-formulario{
+        flex-wrap: wrap;
+    }
+    .campo-formulario div{
+        width: 100%;
+    }
+
+    .icon{
+        display: flex;
+        justify-content: end;
+        align-items: center;
+
+    }
+}
+
+
+/* Elementos para Mobile */
+
+.accordion-mobile{
+    width: 100%;
+    margin: 15px 0px;
+}
+.accordion-mobile .conteiner{
+    width: 80%;
+    margin: 0px auto;
+}
+
+.accordion-mobile .conteiner .accordion {
+    background-color: #fff;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    padding: 10px 0px;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.4em;
+    color: #1F3E59;
+    transition: 0.4s;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.accordion-mobile .conteiner .accordion img {
+    width: 40px;
+}
+  
+.accordion-mobile .conteiner .active, .accordion:hover {
+    background-color: #ddd;
+}
+  
+.accordion-mobile .conteiner .panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+
+
+
+.accordion .fa-arrow-down{
+    transform: rotate(0deg);
+    transition: 0.2s linear;
+}
+
+.active .fa-arrow-down{
+    transform: rotate(180deg);
+    transition: 0.2s linear;
+}
+
+
+
+/* Menu Mobile */
+
+.header-mobile{
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 20;
+    background-color: transparent;
+    
+}
+
+.header-mobile .conteiner{
+    width: 100%;
+    margin: 0px auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-mobile .conteiner .logo{
+    width: 100px;
+    padding: 5px 0px;
+    margin-left: 40px;
+}
+
+.header-mobile .conteiner .logo img{
+    width: 100%;
+}
+
+
+.header-mobile .conteiner .topnav {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+  
+.header-mobile .conteiner .topnav #myLinks {
+    display: none;
+    background-color: #fff;
+    transition: all 0.2s linear;
+}
+
+.header-mobile .conteiner .topnav #myLinks a{
+    padding: 14px 40px;
+    color: #DD2210;
+    font-family: 'Montserrat', sans-serif;
+}
+  
+.header-mobile .conteiner .topnav a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 21px;
+    display: block;
+}
+  
+.header-mobile .conteiner .topnav a.icon {
+    
+    color: #DD2210;
+    display: block;
+    position: absolute;
+    right: 40px;
+    top: 20px;
+}
+  
+.header-mobile .conteiner .topnav a:hover {
+    background-color: #fff;
+    border-radius: 40px;
+    transition: 0.2s linear;
+    color: black;
+}
+
+
+/* End Menu Mobile */
