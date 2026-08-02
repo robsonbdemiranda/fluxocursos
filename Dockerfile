@@ -10,7 +10,9 @@ RUN apt-get update \
     && test "$(git -C /tmp/phpmailer rev-parse HEAD)" = "$PHPMAILER_COMMIT" \
     && mkdir -p /var/www/html/vendor/phpmailer \
     && mv /tmp/phpmailer /var/www/html/vendor/phpmailer/phpmailer \
-    && a2enmod headers rewrite
+    && a2enmod headers rewrite \
+    && echo 'ServerName localhost' > /etc/apache2/conf-available/servername.conf \
+    && a2enconf servername
 
 WORKDIR /var/www/html
 
