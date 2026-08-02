@@ -1,12 +1,11 @@
 function menuMobile() {
-    var x = document.getElementById("myLinks");
-    if (x.style.display === "block") {
-        x.style.display = "none";
-        x.style.transition = "0.1s linear";
-    } else {
-        x.style.display = "block";
-        x.style.transition = "0.1s linear";
-    }
+    var menu = document.getElementById("myLinks");
+    var button = document.querySelector(".header-mobile .icon");
+    var isOpen = menu.style.display === "block";
+
+    menu.style.display = isOpen ? "none" : "block";
+    menu.style.transition = "0.1s linear";
+    if (button) button.setAttribute("aria-expanded", String(!isOpen));
 }
 
 
@@ -16,6 +15,7 @@ var i;
 for (i = 0; i < acc.length; i++) {
   acc[i].addEventListener("click", function() {
     this.classList.toggle("active");
+    this.setAttribute("aria-expanded", String(this.classList.contains("active")));
     var panel = this.nextElementSibling;
     if (panel.style.maxHeight) {
       panel.style.maxHeight = null;

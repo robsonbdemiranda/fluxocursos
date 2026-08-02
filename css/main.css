@@ -148,7 +148,8 @@ font-family: 'Montserrat', sans-serif;
 	flex-direction: column;
 	margin-left: 20px;
 }
-.texto-diferenciais-home h1{
+.texto-diferenciais-home h1,
+.texto-diferenciais-home h2{
 	font-family: 'Bebas Neue', cursive;
 	font-size: 1.5em;
 	color: #032842;
@@ -190,10 +191,17 @@ font-family: 'Montserrat', sans-serif;
     height: auto!important;
 	margin: 0px auto;
 }
-.home-icones-cursos h1{
+.home-icones-cursos h1,
+.home-icones-cursos h2{
 	font-size: 1.5em;
 	padding: 20px 0px;
 	text-align: center;
+}
+
+.equipe-foto h2{
+	font-family: 'Bebas Neue', cursive;
+	font-size: 1.5em;
+	color: #032842;
 }
 .home-icones-cursos p{
 	font-weight: 400;
@@ -635,13 +643,18 @@ footer{
     display: block;
 }
   
-.header-mobile .conteiner .topnav a.icon {
+.header-mobile .conteiner .topnav .icon {
     
     color: #4ebcc2;
     display: block;
     position: absolute;
     right: 40px;
     top: 20px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 21px;
+    cursor: pointer;
 }
   
 .header-mobile .conteiner .topnav a:hover {

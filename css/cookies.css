@@ -40,11 +40,14 @@
 }
 
 .cookies-pref{
-    display: none;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }
   
 .cookies-pref label {
     margin-right: 1rem;
+    color: #fff;
 }
   
 .cookies-save {

@@ -3,7 +3,12 @@ function cookies(functions) {
     const save = document.querySelector('.cookies-save');
     if (!container || !save) return null;
 
-    const localPref = JSON.parse(window.localStorage.getItem('cookies-pref'));
+    let localPref = null;
+    try {
+        localPref = JSON.parse(window.localStorage.getItem('cookies-pref'));
+    } catch (error) {
+        window.localStorage.removeItem('cookies-pref');
+    }
     if (localPref) activateFunctions(localPref);
 
     function getFormPref() {
@@ -13,7 +18,9 @@ function cookies(functions) {
     }
 
     function activateFunctions(pref) {
-        pref.forEach((f) => functions[f]());
+        pref.forEach((f) => {
+            if (typeof functions[f] === 'function') functions[f]();
+        });
         container.style.display = 'none';
         window.localStorage.setItem('cookies-pref', JSON.stringify(pref));
     }
@@ -27,11 +34,11 @@ function cookies(functions) {
 }
 
 function marketing() {
-    console.log('Função de marketing');
+    // Reservado para a ativação de scripts de marketing após o consentimento.
 }
 
 function analytics() {
-    console.log('Função de analytics');
+    if (typeof window.activateAnalytics === 'function') window.activateAnalytics();
 }
 
 cookies({
