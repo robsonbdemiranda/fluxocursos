@@ -71,7 +71,7 @@ final class MauticClient
             $body['tags'] = $this->normalizeTags($payload['tags']);
         }
 
-        return $this->request('POST', '/api/contacts/new', $body);
+        return $this->request('POST', '/api/contacts/new', $body, true);
     }
 
     public function findContactByEmail(string $email): ?array
@@ -88,7 +88,7 @@ final class MauticClient
         $response = $this->request('GET', '/api/contacts', [
             'search' => 'email:' . $email,
             'limit' => 1,
-        ]);
+        ], true);
 
         $contacts = $response['contacts'] ?? [];
         return $contacts === [] ? null : reset($contacts);
@@ -112,7 +112,7 @@ final class MauticClient
             return;
         }
 
-        $ch = curl_init($this->baseUrl . '/oauth/v2/access_token');
+        $ch = curl_init($this->baseUrl . '/s/oauth/v2/access_token');
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
@@ -142,11 +142,12 @@ final class MauticClient
         $this->token = (string) $data['access_token'];
     }
 
-    private function request(string $method, string $path, array $body = []): array
+    private function request(string $method, string $path, array $body = [], bool $useSlimPrefix = false): array
     {
         $this->ensureToken();
 
-        $url = $this->baseUrl . $path;
+        $prefix = $useSlimPrefix ? '/s' : '';
+        $url = $this->baseUrl . $prefix . $path;
         $headers = ['Authorization: Bearer ' . $this->token];
 
         if ($method === 'GET') {
