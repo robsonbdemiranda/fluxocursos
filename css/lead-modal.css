@@ -1,0 +1,98 @@
+.fluxo-lead-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 40, 66, 0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.fluxo-lead-modal.is-open {
+    display: flex;
+}
+
+.fluxo-lead-modal__dialog {
+    background: #fff;
+    max-width: 480px;
+    width: 100%;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    position: relative;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.fluxo-lead-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: 0;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #032842;
+}
+
+.fluxo-lead-modal__title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8em;
+    color: #032842;
+    margin: 0 0 8px 0;
+}
+
+.fluxo-lead-modal__lead {
+    color: #4a4a4a;
+    margin: 0 0 20px 0;
+    line-height: 1.5;
+}
+
+.fluxo-lead-modal__field {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 0.85em;
+    color: #032842;
+    font-weight: 600;
+}
+
+.fluxo-lead-modal__input {
+    width: 100%;
+    border: 1px solid #b3b3b3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 4px;
+    font-size: 1em;
+    font-family: inherit;
+}
+
+.fluxo-lead-modal__input:focus {
+    outline: none;
+    border-color: #4ebcc2;
+    box-shadow: 0 0 0 3px rgba(78, 188, 194, 0.2);
+}
+
+.fluxo-lead-modal__submit {
+    background: #4ebcc2;
+    border: 1px solid #4ebcc2;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.fluxo-lead-modal__submit:hover,
+.fluxo-lead-modal__submit:focus {
+    background: #fff;
+    color: #032842;
+}
+
+.fluxo-lead-modal__status {
+    margin-top: 12px;
+    font-size: 0.85em;
+    color: #032842;
+}

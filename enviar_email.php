@@ -6,6 +6,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 require __DIR__ . '/vendor/phpmailer/phpmailer/src/Exception.php';
 require __DIR__ . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require __DIR__ . '/vendor/phpmailer/phpmailer/src/SMTP.php';
+require __DIR__ . '/mautic.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
@@ -113,4 +114,38 @@ try {
 }
 
 file_put_contents($rateLimitFile, (string) $now, LOCK_EX);
+syncLeadToMautic($nome, $email, $telefone, 'lead_contato_site', $mensagem);
 respond(200, true, 'Mensagem enviada com sucesso.');
+
+function syncLeadToMautic(string $nome, string $email, string $telefone, string $origem, string $mensagem): void
+{
+    try {
+        $client = MauticClient::fromEnvironment();
+        if (!$client->isConfigured()) {
+            return;
+        }
+
+        [$firstname, $lastname] = splitName($nome);
+        $client->upsertContact([
+            'email' => $email,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
+            'phone' => $telefone,
+            'tags' => [$origem, 'site-fluxocursos'],
+            'company' => '',
+            'message' => $mensagem,
+        ]);
+    } catch (Throwable $error) {
+        error_log('Falha ao sincronizar lead no Mautic: ' . $error->getMessage());
+    }
+}
+
+function splitName(string $nome): array
+{
+    $parts = preg_split('/\s+/u', trim($nome));
+    if ($parts === false || $parts === []) {
+        return [$nome, ''];
+    }
+    $firstname = array_shift($parts);
+    return [$firstname, implode(' ', $parts)];
+}
