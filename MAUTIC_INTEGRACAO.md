@@ -15,8 +15,6 @@ Configure no Easypanel, em **Ambiente**, sem segredos versionados:
 
 ```text
 MAUTIC_BASE_URL=https://mautic.fluxo.com.br
-MAUTIC_PUBLIC_USER=fluxocursos-site
-MAUTIC_PUBLIC_PASS=<senha do usuário de integração>
 MAUTIC_PUBLIC_CLIENT_ID=<Client ID OAuth2>
 MAUTIC_PUBLIC_CLIENT_SECRET=<Client Secret OAuth2>
 ```
@@ -24,9 +22,10 @@ MAUTIC_PUBLIC_CLIENT_SECRET=<Client Secret OAuth2>
 ## Como obter as credenciais
 
 1. Habilite a API: Settings → Configuration → API Settings → API enabled.
-2. Crie um usuário dedicado: Settings → Users → New. Use role com permissão de API.
-3. Crie uma credencial OAuth2: Settings → Integrations → API Credentials → New.
+2. Crie uma credencial OAuth2: Settings → Integrations → API Credentials → New.
+3. Use **Redirect URI**: `https://fluxocursos.com.br/oauth/callback`.
 4. Copie Client ID e Client Secret imediatamente. Eles só aparecem uma vez.
+5. Esta integração usa **Client Credentials Grant**, sem necessidade de usuário e senha do Mautic.
 
 ## Tags geradas automaticamente
 

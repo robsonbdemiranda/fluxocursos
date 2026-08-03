@@ -6,10 +6,9 @@ final class MauticClient
     private string $baseUrl;
     private string $clientId;
     private string $clientSecret;
-    private string $username;
-    private string $password;
     private int $timeoutSeconds;
     private ?string $token = null;
+    private ?int $tokenExpiresAt = null;
 
     public function __construct(array $config)
     {
@@ -21,8 +20,6 @@ final class MauticClient
         $this->baseUrl = $baseUrl;
         $this->clientId = (string) ($config['client_id'] ?? '');
         $this->clientSecret = (string) ($config['client_secret'] ?? '');
-        $this->username = (string) ($config['username'] ?? '');
-        $this->password = (string) ($config['password'] ?? '');
         $this->timeoutSeconds = max(5, (int) ($config['timeout'] ?? 15));
     }
 
@@ -32,8 +29,6 @@ final class MauticClient
             'base_url' => getenv('MAUTIC_BASE_URL') ?: '',
             'client_id' => getenv('MAUTIC_PUBLIC_CLIENT_ID') ?: '',
             'client_secret' => getenv('MAUTIC_PUBLIC_CLIENT_SECRET') ?: '',
-            'username' => getenv('MAUTIC_PUBLIC_USER') ?: '',
-            'password' => getenv('MAUTIC_PUBLIC_PASS') ?: '',
         ]);
     }
 
@@ -41,9 +36,7 @@ final class MauticClient
     {
         return $this->baseUrl !== ''
             && $this->clientId !== ''
-            && $this->clientSecret !== ''
-            && $this->username !== ''
-            && $this->password !== '';
+            && $this->clientSecret !== '';
     }
 
     public function upsertContact(array $payload): array
@@ -71,7 +64,7 @@ final class MauticClient
             $body['tags'] = $this->normalizeTags($payload['tags']);
         }
 
-        return $this->request('POST', '/api/contacts/new', $body, true);
+        return $this->request('POST', '/api/contacts/new', $body);
     }
 
     public function findContactByEmail(string $email): ?array
@@ -88,7 +81,7 @@ final class MauticClient
         $response = $this->request('GET', '/api/contacts', [
             'search' => 'email:' . $email,
             'limit' => 1,
-        ], true);
+        ]);
 
         $contacts = $response['contacts'] ?? [];
         return $contacts === [] ? null : reset($contacts);
@@ -108,20 +101,18 @@ final class MauticClient
 
     private function ensureToken(): void
     {
-        if ($this->token !== null) {
+        if ($this->token !== null && $this->tokenExpiresAt !== null && time() < $this->tokenExpiresAt - 30) {
             return;
         }
 
-        $ch = curl_init($this->baseUrl . '/s/oauth/v2/access_token');
+        $ch = curl_init($this->baseUrl . '/oauth/v2/token');
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => http_build_query([
-                'grant_type' => 'password',
+                'grant_type' => 'client_credentials',
                 'client_id' => $this->clientId,
                 'client_secret' => $this->clientSecret,
-                'username' => $this->username,
-                'password' => $this->password,
             ]),
             CURLOPT_TIMEOUT => $this->timeoutSeconds,
         ]);
@@ -140,14 +131,15 @@ final class MauticClient
         }
 
         $this->token = (string) $data['access_token'];
+        $expiresIn = isset($data['expires_in']) ? (int) $data['expires_in'] : 3600;
+        $this->tokenExpiresAt = time() + max(60, $expiresIn);
     }
 
-    private function request(string $method, string $path, array $body = [], bool $useSlimPrefix = false): array
+    private function request(string $method, string $path, array $body = []): array
     {
         $this->ensureToken();
 
-        $prefix = $useSlimPrefix ? '/s' : '';
-        $url = $this->baseUrl . $prefix . $path;
+        $url = $this->baseUrl . $path;
         $headers = ['Authorization: Bearer ' . $this->token];
 
         if ($method === 'GET') {
@@ -180,6 +172,7 @@ final class MauticClient
 
         if ($status === 401) {
             $this->token = null;
+            $this->tokenExpiresAt = null;
             throw new RuntimeException('Token Mautic expirado.');
         }
 
