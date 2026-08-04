@@ -26,10 +26,20 @@ final class MauticClient
     public static function fromEnvironment(): self
     {
         return new self([
-            'base_url' => getenv('MAUTIC_BASE_URL') ?: '',
-            'client_id' => getenv('MAUTIC_PUBLIC_CLIENT_ID') ?: '',
-            'client_secret' => getenv('MAUTIC_PUBLIC_CLIENT_SECRET') ?: '',
+            'base_url' => self::cleanEnv('MAUTIC_BASE_URL'),
+            'client_id' => self::cleanEnv('MAUTIC_PUBLIC_CLIENT_ID'),
+            'client_secret' => self::cleanEnv('MAUTIC_PUBLIC_CLIENT_SECRET'),
         ]);
+    }
+
+    private static function cleanEnv(string $name): string
+    {
+        $value = (string) getenv($name);
+        if ($value === '') {
+            return '';
+        }
+        $value = preg_replace('/[\r\n\t]+/', '', $value) ?? '';
+        return trim($value);
     }
 
     public function isConfigured(): bool
