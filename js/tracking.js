@@ -36,4 +36,28 @@
     } catch (error) {
         window.localStorage.removeItem("cookies-pref");
     }
+
+    window.fluxoUtm = readUtmParams();
+    if (window.fluxoUtm && Object.keys(window.fluxoUtm).length) {
+        try {
+            window.sessionStorage.setItem("fluxo:utm", JSON.stringify(window.fluxoUtm));
+        } catch (error) {
+            // ignore
+        }
+    }
+
+    function readUtmParams() {
+        try {
+            var search = new URLSearchParams(window.location.search);
+            var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+            var data = {};
+            keys.forEach(function (key) {
+                var value = search.get(key);
+                if (value) data[key] = value;
+            });
+            return data;
+        } catch (error) {
+            return {};
+        }
+    }
 }());

@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fluxo Cursos | Contato</title>
-    <meta name="description" content="Entre em contato com a Fluxo Cursos para tirar dúvidas sobre cursos de Ecografia Vascular com Doppler.">
+    <meta name="description" content="Entre em contato com a Fluxo Cursos para tirar dÃºvidas sobre cursos de Ecografia Vascular com Doppler.">
 
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/main.css">
@@ -34,7 +34,7 @@
                 <ul>
                     <li><a href="index.html">HOME</a></li>
                     <div class="dropdown">
-                        <button class="dropbtn interna">SOBRE NÓS</button>
+                        <button class="dropbtn interna">SOBRE NÃ“S</button>
                         <div class="dropdown-content">
                             <a href="afluxo.html">A FLUXO</a>
                             <a href="equipe.html">NOSSA EQUIPE</a>
@@ -42,7 +42,9 @@
                     </div>
                     <li><a href="cursos.html">CURSOS</a></li>
                     <li><a href="contato.html" class="ativo">CONTATO</a></li>
-                    <li><a target="_blank" rel="noopener" href="https://www.youtube.com/user/cursoduplexweb">VÍDEOS</a></li>
+                    <li><a target="_blank" rel="noopener" href="https://www.youtube.com/user/cursoduplexweb">VÃDEOS</a></li>
+                    <li><a href="blog.html">BLOG</a></li>
+                    <li><a href="materiais.html">MATERIAIS</a></li>
                 </ul>
             </nav>
             <div class="redes">
@@ -66,7 +68,7 @@
                     <a href="equipe.html">Nossa Equipe</a>
                     <a href="cursos.html">Cursos</a>
                     <a href="contato.html">Contato</a>
-                    <a target="_blank" rel="noopener" href="https://www.youtube.com/user/cursoduplexweb">Vídeos</a>
+                    <a target="_blank" rel="noopener" href="https://www.youtube.com/user/cursoduplexweb">VÃ­deos</a>
                     <a target="_blank" rel="noopener" href="https://www.instagram.com/fluxocursos">Instagram</a>
                     <div class="redes-mobile">
                         <a href="https://www.facebook.com/FluxoCursos" target="_blank" rel="noopener" aria-label="Facebook"><img src="img/facebook.svg" alt="Facebook"></a>
@@ -103,7 +105,7 @@
                     <textarea id="mensagem" name="mensagem" maxlength="3000" required></textarea>
                 </div>
                 <div class="campo-oculto" aria-hidden="true">
-                    <label for="website">Não preencha este campo</label>
+                    <label for="website">NÃ£o preencha este campo</label>
                     <input id="website" type="text" name="website" tabindex="-1" autocomplete="off">
                 </div>
                 <button class="bt-form" type="submit">Enviar</button>
@@ -113,9 +115,9 @@
 
         <div class="contato-2">
             <h2>Contato</h2>
-            <p>Entre em contato! Ficaremos felizes em responder suas dúvidas, propostas ou opiniões.</p>
+            <p>Entre em contato! Ficaremos felizes em responder suas dÃºvidas, propostas ou opiniÃµes.</p>
             <div class="icon"><i class="fa fa-home" aria-hidden="true"></i>
-                <p>Rua Arthur Corradi, 101 sala 54 - São Bernardo do Campo - SP</p>
+                <p>Rua Arthur Corradi, 101 sala 54 - SÃ£o Bernardo do Campo - SP</p>
             </div>
             <div class="icon"><i class="fa fa-phone" aria-hidden="true"></i>
                 <p>(11) 94886-0196</p>
@@ -130,8 +132,8 @@
         <div class="rodape">
             <img src="img/logocolorida.png" alt="Fluxo Cursos">
             <div class="texto-rodape">
-                <h4>Endereço</h4>
-                <p>Rua Arthur Corradi, 101 sala 54 <br>São Bernardo do Campo - SP<br>CEP: 09725-240</p>
+                <h4>EndereÃ§o</h4>
+                <p>Rua Arthur Corradi, 101 sala 54 <br>SÃ£o Bernardo do Campo - SP<br>CEP: 09725-240</p>
             </div>
             <div class="redes">
                 <a href="https://www.facebook.com/FluxoCursos" target="_blank" rel="noopener" aria-label="Facebook"><img src="img/facebook.svg" alt="Facebook"></a>
@@ -140,15 +142,16 @@
             </div>
         </div>
         <div class="made-by">
-            <p>Feito por: <a target="_blank" rel="noopener" href="https://gridestrategia.com.br">GRID Design e Estratégia</a></p>
+            <p>Feito por: <a target="_blank" rel="noopener" href="https://gridestrategia.com.br">GRID Design e EstratÃ©gia</a></p>
             <p>Fluxo Cursos <span id="ano-atual"></span> &copy; Todos os Direitos Reservados</p>
-            <p><a href="politica-privacidade.html">Política de Privacidade</a></p>
+            <p><a href="politica-privacidade.html">PolÃ­tica de Privacidade</a></p>
         </div>
     </footer>
 
     <script>window.fluxoTracking = { gtmId: 'GTM-KW5DHT9' };</script>
     <script src="js/tracking.js"></script>
     <script src="js/mobile.js"></script>
+    <script src="js/exit-intent.js"></script>
     <script>
         document.getElementById('ano-atual').textContent = new Date().getFullYear();
 
@@ -175,13 +178,13 @@
                 var data = await response.json();
 
                 if (!response.ok || !data.success) {
-                    throw new Error(data.message || 'Não foi possível enviar a mensagem.');
+                    throw new Error(data.message || 'NÃ£o foi possÃ­vel enviar a mensagem.');
                 }
 
                 form.reset();
                 status.textContent = data.message;
             } catch (error) {
-                status.textContent = error.message || 'Não foi possível enviar a mensagem. Tente novamente mais tarde.';
+                status.textContent = error.message || 'NÃ£o foi possÃ­vel enviar a mensagem. Tente novamente mais tarde.';
             } finally {
                 button.disabled = false;
             }
@@ -191,3 +194,5 @@
 </body>
 
 </html>
+
+
