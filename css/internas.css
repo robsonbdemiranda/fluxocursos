@@ -85,6 +85,9 @@
 	padding: 20px 0px;
 	text-align: center;
 	margin: 0px 25px;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 }
 .cursos-titulo{
 	width: 90%;
@@ -180,6 +183,14 @@ ul.cursos-lista li{
 	background-color: #4ebcc2;
 	color: #FFF;
 	transition: all 0.3s;
+}
+.cursos .bt-list-interesse,
+.cursos .bt-form{
+	display: block;
+	width: max-content;
+	margin: 30px auto 0 auto;
+	position: static;
+	top: auto;
 }
 .area-servicos{
 	width: 100%;
