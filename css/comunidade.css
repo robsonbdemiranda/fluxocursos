@@ -1,0 +1,60 @@
+.comunidade-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin: 24px 0 48px 0;
+}
+
+.comunidade-card {
+    background: #fff;
+    border: 1px solid #b3b3b3;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comunidade-card:hover {
+    border-color: #4ebcc2;
+    box-shadow: 0 6px 18px rgba(3, 40, 66, 0.08);
+}
+
+.comunidade-card h2 {
+    font-family: 'Bebas Neue', cursive;
+    color: #032842;
+    font-size: 1.5em;
+    margin: 0;
+    letter-spacing: 0.02em;
+}
+
+.comunidade-card p {
+    font-family: 'Montserrat', sans-serif;
+    color: #4a4a4a;
+    margin: 0;
+    font-size: 0.95em;
+    line-height: 1.55;
+}
+
+.comunidade-card__btn {
+    margin-top: auto;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: #4ebcc2;
+    border: 1px solid #4ebcc2;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.comunidade-card__btn:hover,
+.comunidade-card__btn:focus {
+    background: #032842;
+    border-color: #032842;
+    color: #fff;
+}
