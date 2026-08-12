@@ -40,6 +40,17 @@ Esta semana integra a comunidade em `https://app.clubedodoppler.com.br` (BuddyBo
 
 ## Instalação na comunidade BuddyBoss
 
+### Regra de ativação de conta
+
+O plugin **só envia leads ao Mautic quando o cadastro é confirmado**. Signups pendentes (`pending signups`, `user_status = 2`) são ignorados.
+
+Quem ativa o cadastro:
+
+- Confirmação por e-mail.
+- Aprovação manual do administrador.
+
+Em ambos os casos, o plugin captura via hook `bp_core_activated_user`.
+
 ### Pré-requisito: criar campos xProfile
 
 1. No painel da comunidade, vá em **Usuários > Profile Fields**.

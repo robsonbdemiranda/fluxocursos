@@ -35,7 +35,7 @@ if (!class_exists('Fluxo_BuddyBoss_Mautic_Bridge')) {
             add_action('init', [$this, 'loadTextdomain']);
             add_action('admin_menu', [$this, 'registerMenu']);
             add_action('admin_init', [$this, 'registerSettings']);
-            add_action('bp_core_signup_user', [$this, 'onSignup'], 20, 5);
+            add_action('bp_core_activated_user', [$this, 'onActivated'], 20, 3);
             add_action('xprofile_updated_profile', [$this, 'onProfileUpdated'], 20, 5);
         }
 
@@ -138,14 +138,40 @@ if (!class_exists('Fluxo_BuddyBoss_Mautic_Bridge')) {
             <?php
         }
 
-        public function onSignup(int $userId, string $userLogin, string $userPassword, string $userEmail, array $usermeta): void
+        public function onActivated(int $userId, string $key, $user): void
         {
             $settings = $this->getSettings();
             if (empty($settings['send_signup'])) {
                 return;
             }
-            $payload = $this->buildPayload($userId, $userEmail, 'cadastro_comunidade', $usermeta);
-            $this->send($payload, $userEmail);
+
+            $userObject = is_object($user) ? $user : get_userdata($userId);
+            if (!$userObject || empty($userObject->user_email)) {
+                return;
+            }
+
+            $email = (string) $userObject->user_email;
+            $usermeta = is_array($userObject) ? $userObject : [];
+            $displayName = (string) $userObject->display_name;
+            $firstName = (string) $userObject->first_name;
+            $lastName = (string) $userObject->last_name;
+
+            $usermeta['display_name'] = $displayName;
+            $usermeta['first_name'] = $firstName;
+            $usermeta['last_name'] = $lastName;
+
+            $payload = $this->buildPayload($userId, $email, 'cadastro_comunidade', $usermeta, $firstName, $lastName);
+            $this->send($payload, $email);
+        }
+
+        private function isPendingSignup(int $userId): bool
+        {
+            global $wpdb;
+            $status = (int) $wpdb->get_var($wpdb->prepare(
+                "SELECT user_status FROM {$wpdb->users} WHERE ID = %d",
+                $userId
+            ));
+            return $status === 2;
         }
 
         public function onProfileUpdated(int $userId, array $postedFieldIds, array $errors, array $oldFieldData, array $newFieldData): void
@@ -168,13 +194,22 @@ if (!class_exists('Fluxo_BuddyBoss_Mautic_Bridge')) {
             $this->send($payload, $user->user_email);
         }
 
-        private function buildPayload(int $userId, string $email, string $event, array $usermeta): array
+        private function buildPayload(int $userId, string $email, string $event, array $usermeta, string $firstName = '', string $lastName = ''): array
         {
             $settings = $this->getSettings();
             $user = get_userdata($userId);
-            $displayName = $user ? $user->display_name : '';
-            $firstName = $user && !empty($user->first_name) ? $user->first_name : $displayName;
-            $lastName = $user && !empty($user->last_name) ? $user->last_name : '';
+            $displayName = $user ? $user->display_name : ($usermeta['display_name'] ?? '');
+
+            if ($firstName === '') {
+                $firstName = $user && !empty($user->first_name)
+                    ? $user->first_name
+                    : ($usermeta['first_name'] ?? '');
+            }
+            if ($lastName === '') {
+                $lastName = $user && !empty($user->last_name)
+                    ? $user->last_name
+                    : ($usermeta['last_name'] ?? '');
+            }
 
             $especialidade = '';
             $cidade = '';
