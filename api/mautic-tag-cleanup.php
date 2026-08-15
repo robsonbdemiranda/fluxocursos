@@ -108,7 +108,7 @@ try {
     $page = 1;
     $perPage = 100;
     while (true) {
-        $url = sprintf('%s/api/contacts?search=tags:comunidade_clube_doppler&limit=%d&start=%d', $client->getBaseUrl(), $perPage, ($page - 1) * $perPage);
+        $url = sprintf('%s/api/contacts?search=tag:comunidade_clube_doppler&limit=%d&start=%d', $client->getBaseUrl(), $perPage, ($page - 1) * $perPage);
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,

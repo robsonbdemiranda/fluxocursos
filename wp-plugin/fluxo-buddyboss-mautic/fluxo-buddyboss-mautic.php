@@ -217,9 +217,21 @@ if (!class_exists('Fluxo_BuddyBoss_Mautic_Bridge')) {
             $telefone = '';
 
             if (function_exists('xprofile_get_field_data')) {
-                $especialidade = (string) xprofile_get_field_data('Especialidade', $userId);
-                $cidade = (string) xprofile_get_field_data('Cidade', $userId);
-                $crm = (string) xprofile_get_field_data('CRM', $userId);
+                $candidates = [
+                    'especialidade' => ['Especialidad médica', 'Especialidade'],
+                    'cidade'         => ['Ciudad', 'Cidade'],
+                    'crm'            => ['Registro médico', 'CRM', 'Crm'],
+                    'telefone'       => ['Teléfono', 'Telefone'],
+                ];
+                foreach ($candidates as $key => $names) {
+                    foreach ($names as $name) {
+                        $value = xprofile_get_field_data($name, $userId);
+                        if (!empty($value)) {
+                            ${$key} = (string) $value;
+                            break;
+                        }
+                    }
+                }
             }
 
             foreach ($usermeta as $key => $value) {
