@@ -130,7 +130,7 @@ function mapEspecialidade(string $raw): string
     if ($value === '') {
         return '';
     }
-    $normalized = strtolower($thisRemoveAccents($value));
+    $normalized = strtolower(thisRemoveAccents($value));
     $normalized = preg_replace('/[^a-z0-9\s]/', ' ', $normalized) ?? $normalized;
     $normalized = preg_replace('/\s+/', ' ', $normalized) ?? '';
     $normalized = trim($normalized);
