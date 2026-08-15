@@ -82,20 +82,23 @@ function filterTags(array $tags, array $keep, array $especialidades): array
         $out[] = $tag;
     }
 
-    $invalid = ['comunidade_crm_203270', 'comunidade_especialidade_a-1-i-0-s-19-cirurgi-o-vascular'];
+        $invalid = ['comunidade_crm_203270', 'comunidade_especialidade_a-1-i-0-s-19-cirurgi-o-vascular'];
 
-    $cleaned = [];
-    foreach ($out as $tag) {
-        if (in_array($tag, $invalid, true)) {
-            continue;
+        $cleaned = [];
+        foreach ($out as $tag) {
+            if (in_array($tag, $invalid, true)) {
+                continue;
+            }
+            if (preg_match('/^comunidade_crm_[0-9]+/', $tag)) {
+                continue;
+            }
+            if (preg_match('/^comunidade_crm_[a-z]{2,5}$/', $tag)) {
+                continue;
+            }
+            $cleaned[] = $tag;
         }
-        if (preg_match('/^comunidade_crm_[0-9]+/', $tag)) {
-            continue;
-        }
-        $cleaned[] = $tag;
-    }
 
-    return array_values(array_unique($cleaned));
+        return array_values(array_unique($cleaned));
 }
 
 $processed = 0;
