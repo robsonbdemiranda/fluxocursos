@@ -68,12 +68,46 @@ function fetchMembers(string $baseUrl, string $username, string $password, int $
         throw new RuntimeException('BuddyBoss status ' . $r['status'] . ': ' . substr($r['body'], 0, 200));
     }
     $data = json_decode($r['body'], true);
-    return is_array($data) ? $data : [];
+    if (!is_array($data)) {
+        throw new RuntimeException('BuddyBoss retornou resposta invalida (nao-array): ' . substr($r['body'], 0, 200));
+    }
+    if (isset($data['error']) || isset($data['message'])) {
+        throw new RuntimeException('BuddyBoss retornou erro: ' . ($data['message'] ?? json_encode($data)));
+    }
+    return $data;
 }
 
-function extractXprofileValue(array $xprofile, array $candidates): string
+function extractXprofileValue($xprofile, array $candidates): string
 {
-    foreach ($xprofile as $field) {
+    $fields = [];
+
+    if (is_array($xprofile)) {
+        if (isset($xprofile['groups']) && is_array($xprofile['groups'])) {
+            foreach ($xprofile['groups'] as $group) {
+                if (!is_array($group) || !isset($group['fields']) || !is_array($group['fields'])) {
+                    continue;
+                }
+                foreach ($group['fields'] as $fieldId => $field) {
+                    if (!is_array($field)) {
+                        continue;
+                    }
+                    $fields[$fieldId] = $field;
+                }
+            }
+        } else {
+            foreach ($xprofile as $field) {
+                if (is_array($field)) {
+                    foreach ($field as $fieldId => $data) {
+                        if (is_array($data)) {
+                            $fields[$fieldId] = $data;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    foreach ($fields as $field) {
         if (!is_array($field)) {
             continue;
         }
@@ -153,11 +187,12 @@ try {
             break;
         }
         foreach ($members as $member) {
-            if (!is_array($member)) {
+            if (!is_array($member) && !is_object($member)) {
                 continue;
             }
-            $memberId = (int) ($member['id'] ?? 0);
-            $email = (string) ($member['email'] ?? '');
+            $memberArr = is_object($member) ? (array) $member : $member;
+            $memberId = (int) ($memberArr['id'] ?? 0);
+            $email = (string) ($memberArr['email'] ?? '');
             if ($memberId <= 0 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $skipped++;
                 continue;
@@ -171,16 +206,16 @@ try {
                 break 2;
             }
 
-            $xprofile = is_array($member['xprofile'] ?? null) ? $member['xprofile'] : [];
+            $xprofile = $memberArr['xprofile'] ?? [];
 
             $payload = [
                 'event' => 'comunidade_importacao_inicial',
                 'user_id' => $memberId,
                 'community_slug' => cleanEnv('BUDDYBOSS_COMMUNITY_SLUG') ?: 'clube-do-doppler',
                 'customer' => [
-                    'name' => (string) ($member['name'] ?? ''),
+                    'name' => (string) ($memberArr['name'] ?? $memberArr['profile_name'] ?? ''),
                     'email' => $email,
-                    'phone' => (string) ($member['meta']['phone'] ?? ''),
+                    'phone' => (string) ((is_array($memberArr['meta'] ?? null) ? $memberArr['meta']['phone'] ?? '' : '') ?: ''),
                 ],
                 'profile' => [
                     'especialidade' => extractXprofileValue($xprofile, ['Especialidad', 'Especialidade']),
