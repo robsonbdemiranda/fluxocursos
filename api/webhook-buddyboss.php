@@ -49,6 +49,15 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     respond(422, false, 'E-mail inválido.');
 }
 
+$ESPECIALIDADES_PERMITIDAS = [
+    'cirurgiao_vascular',
+    'angiologista',
+    'ecocardiografista',
+    'ultrassonografista',
+    'radiologista',
+    'outros',
+];
+
 try {
     $client = MauticClient::fromEnvironment();
     if ($client->isConfigured()) {
@@ -62,6 +71,7 @@ try {
                 break;
             case 'perfil_atualizado_comunidade':
                 $tags[] = 'comunidade_perfil_atualizado';
+                $tags[] = 'comunidade_clube_doppler';
                 break;
             case 'comunidade_importacao_inicial':
                 $tags[] = 'comunidade_clube_doppler';
@@ -70,16 +80,8 @@ try {
         }
 
         $especialidade = sanitizeTag((string) ($profile['especialidade'] ?? ''));
-        $cidade = sanitizeTag((string) ($profile['cidade'] ?? ''));
-        $crm = sanitizeTag((string) ($profile['crm'] ?? ''));
-        if ($especialidade !== '') {
-            $tags[] = 'comunidade_especialidade_' . $especialidade;
-        }
-        if ($cidade !== '') {
-            $tags[] = 'comunidade_cidade_' . $cidade;
-        }
-        if ($crm !== '') {
-            $tags[] = 'comunidade_crm_' . $crm;
+        if ($especialidade !== '' && in_array($especialidade, $ESPECIALIDADES_PERMITIDAS, true)) {
+            $tags[] = 'comunidade_' . $especialidade;
         }
 
         $client->upsertContact([

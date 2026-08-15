@@ -145,6 +145,17 @@ final class MauticClient
         $this->tokenExpiresAt = time() + max(60, $expiresIn);
     }
 
+    public function getToken(): string
+    {
+        $this->ensureToken();
+        return (string) $this->token;
+    }
+
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
+    }
+
     private function request(string $method, string $path, array $body = []): array
     {
         $this->ensureToken();

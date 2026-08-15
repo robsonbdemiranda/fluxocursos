@@ -99,15 +99,76 @@ function getXprofileValue(array $fields, array $candidates): string
         foreach ($candidates as $candidate) {
             $needle = strtolower($candidate);
             if ($name === $needle || $label === $needle || strpos($name, $needle) !== false || strpos($label, $needle) !== false) {
-                $value = $field['value']['raw'] ?? ($field['value'] ?? '');
-                if (is_array($value)) {
-                    $value = implode(', ', array_filter(array_map('strval', $value)));
+                $raw = $field['value']['raw'] ?? '';
+                $unserialized = $field['value']['unserialized'] ?? null;
+
+                if (is_array($unserialized) && !empty($unserialized)) {
+                    return (string) implode(', ', array_filter(array_map('strval', $unserialized)));
                 }
-                return (string) $value;
+
+                if (is_string($raw) && preg_match('/^a:\d+:\{/', $raw)) {
+                    $unserialized = @unserialize($raw);
+                    if (is_array($unserialized)) {
+                        return (string) implode(', ', array_filter(array_map('strval', $unserialized)));
+                    }
+                }
+
+                if (is_array($raw)) {
+                    return (string) implode(', ', array_filter(array_map('strval', $raw)));
+                }
+
+                return (string) $raw;
             }
         }
     }
     return '';
+}
+
+function mapEspecialidade(string $raw): string
+{
+    $value = trim((string) $raw);
+    if ($value === '') {
+        return '';
+    }
+    $normalized = strtolower($thisRemoveAccents($value));
+    $normalized = preg_replace('/[^a-z0-9\s]/', ' ', $normalized) ?? $normalized;
+    $normalized = preg_replace('/\s+/', ' ', $normalized) ?? '';
+    $normalized = trim($normalized);
+
+    $candidates = [
+        'cirurgiao vascular' => 'cirurgiao_vascular',
+        'cirurgiâ vascular' => 'cirurgiao_vascular',
+        'angiologista' => 'angiologista',
+        'ecocardiografista' => 'ecocardiografista',
+        'ultrassonografista' => 'ultrassonografista',
+        'radiologista' => 'radiologista',
+        'outros' => 'outros',
+        'outras' => 'outros',
+    ];
+
+    foreach ($candidates as $needle => $slug) {
+        if (strpos($normalized, $needle) !== false) {
+            return $slug;
+        }
+    }
+    return 'outros';
+}
+
+function thisRemoveAccents(string $value): string
+{
+    $search = ['á', 'à', 'â', 'ã', 'ä', 'Á', 'À', 'Â', 'Ã', 'Ä',
+        'é', 'è', 'ê', 'ë', 'É', 'È', 'Ê', 'Ë',
+        'í', 'ì', 'î', 'ï', 'Í', 'Ì', 'Î', 'Ï',
+        'ó', 'ò', 'ô', 'õ', 'ö', 'Ó', 'Ò', 'Ô', 'Õ', 'Ö',
+        'ú', 'ù', 'û', 'ü', 'Ú', 'Ù', 'Û', 'Ü',
+        'ç', 'Ç', 'ñ', 'Ñ'];
+    $replace = ['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a',
+        'e', 'e', 'e', 'e', 'e', 'e', 'e', 'e',
+        'i', 'i', 'i', 'i', 'i', 'i', 'i', 'i',
+        'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o',
+        'u', 'u', 'u', 'u', 'u', 'u', 'u', 'u',
+        'c', 'c', 'n', 'n'];
+    return str_replace($search, $replace, $value);
 }
 
 function postWebhook(string $endpoint, string $secret, array $payload): array
@@ -218,12 +279,12 @@ try {
                     'email' => $email,
                     'phone' => (string) ($user['meta']['phone'] ?? ''),
                 ],
-                'profile' => [
-                    'especialidade' => getXprofileValue($xprofile, ['Especialidad', 'Especialidade']),
-                    'cidade' => getXprofileValue($xprofile, ['Ciudad', 'Cidade']),
-                    'crm' => getXprofileValue($xprofile, ['CRM', 'Registro']),
-                    'telefone' => getXprofileValue($xprofile, ['Teléfono', 'Telefone', 'Phone']),
-                ],
+            'profile' => [
+                'especialidade' => mapEspecialidade(getXprofileValue($xprofile, ['Especialidad', 'Especialidade'])),
+                'cidade' => '',
+                'crm' => '',
+                'telefone' => getXprofileValue($xprofile, ['Teléfono', 'Telefone', 'Phone']),
+            ],
             ];
 
             if (!$dryRun) {
