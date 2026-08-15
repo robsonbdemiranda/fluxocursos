@@ -24,23 +24,6 @@ function cleanEnv(string $name): string
     return trim($value);
 }
 
-function loadSyncTracker(): array
-{
-    $file = sys_get_temp_dir() . '/fluxo-buddyboss-sync.json';
-    if (!is_file($file)) {
-        return [];
-    }
-    $raw = (string) file_get_contents($file);
-    $data = json_decode($raw, true);
-    return is_array($data) ? $data : [];
-}
-
-function saveSyncTracker(array $tracker): void
-{
-    $file = sys_get_temp_dir() . '/fluxo-buddyboss-sync.json';
-    file_put_contents($file, json_encode($tracker, JSON_PRETTY_PRINT), LOCK_EX);
-}
-
 function curlGet(string $url, string $username, string $password): array
 {
     $ch = curl_init($url);
@@ -60,53 +43,53 @@ function curlGet(string $url, string $username, string $password): array
     return ['status' => $code, 'body' => (string) $body];
 }
 
-function fetchMembers(string $baseUrl, string $username, string $password, int $page, int $perPage): array
+function fetchUsers(string $baseUrl, string $username, string $password, int $page, int $perPage): array
 {
-    $url = sprintf('%s/wp-json/buddyboss/v1/members?per_page=%d&page=%d', rtrim($baseUrl, '/'), $perPage, $page);
+    $url = sprintf('%s/wp-json/wp/v2/users?per_page=%d&page=%d&context=edit&roles=subscriber', rtrim($baseUrl, '/'), $perPage, $page);
     $r = curlGet($url, $username, $password);
     if ($r['status'] >= 400) {
-        throw new RuntimeException('BuddyBoss status ' . $r['status'] . ': ' . substr($r['body'], 0, 200));
+        throw new RuntimeException('WP REST status ' . $r['status'] . ': ' . substr($r['body'], 0, 200));
     }
     $data = json_decode($r['body'], true);
     if (!is_array($data)) {
-        throw new RuntimeException('BuddyBoss retornou resposta invalida (nao-array): ' . substr($r['body'], 0, 200));
-    }
-    if (isset($data['error']) || isset($data['message'])) {
-        throw new RuntimeException('BuddyBoss retornou erro: ' . ($data['message'] ?? json_encode($data)));
+        throw new RuntimeException('WP REST resposta invalida: ' . substr($r['body'], 0, 200));
     }
     return $data;
 }
 
-function extractXprofileValue($xprofile, array $candidates): string
+function fetchMemberProfile(string $baseUrl, string $username, string $password, int $memberId): array
 {
+    $url = sprintf('%s/wp-json/buddyboss/v1/members/%d', rtrim($baseUrl, '/'), $memberId);
+    $r = curlGet($url, $username, $password);
+    if ($r['status'] >= 400) {
+        return [];
+    }
+    $data = json_decode($r['body'], true);
+    if (!is_array($data)) {
+        return [];
+    }
+    $xprofile = $data['xprofile'] ?? [];
+    if (!is_array($xprofile)) {
+        return [];
+    }
     $fields = [];
-
-    if (is_array($xprofile)) {
-        if (isset($xprofile['groups']) && is_array($xprofile['groups'])) {
-            foreach ($xprofile['groups'] as $group) {
-                if (!is_array($group) || !isset($group['fields']) || !is_array($group['fields'])) {
-                    continue;
-                }
-                foreach ($group['fields'] as $fieldId => $field) {
-                    if (!is_array($field)) {
-                        continue;
-                    }
-                    $fields[$fieldId] = $field;
-                }
+    if (isset($xprofile['groups']) && is_array($xprofile['groups'])) {
+        foreach ($xprofile['groups'] as $group) {
+            if (!is_array($group) || !isset($group['fields']) || !is_array($group['fields'])) {
+                continue;
             }
-        } else {
-            foreach ($xprofile as $field) {
+            foreach ($group['fields'] as $fieldId => $field) {
                 if (is_array($field)) {
-                    foreach ($field as $fieldId => $data) {
-                        if (is_array($data)) {
-                            $fields[$fieldId] = $data;
-                        }
-                    }
+                    $fields[$fieldId] = $field;
                 }
             }
         }
     }
+    return $fields;
+}
 
+function getXprofileValue(array $fields, array $candidates): string
+{
     foreach ($fields as $field) {
         if (!is_array($field)) {
             continue;
@@ -140,7 +123,7 @@ function postWebhook(string $endpoint, string $secret, array $payload): array
         CURLOPT_HTTPHEADER => [
             'Content-Type: application/json',
             'X-Fluxo-Signature: ' . $signature,
-            'X-Fluxo-Source: fluxo-buddyboss-bulk/1.0.0',
+            'X-Fluxo-Source: fluxo-buddyboss-bulk/1.0.1',
         ],
     ]);
     $raw = curl_exec($ch);
@@ -164,15 +147,20 @@ if ($secret === '' || $baseUrl === '' || $username === '' || $password === '') {
 
 $webhookEndpoint = cleanEnv('BUDDYBOSS_WEBHOOK_URL');
 if ($webhookEndpoint === '') {
-    $webhookEndpoint = str_replace('/api/buddyboss-sync.php', '/api/webhook-buddyboss.php', cleanEnv('BUDDYBOSS_PUBLIC_URL') ?: 'https://fluxocursos.com.br/api/webhook-buddyboss.php');
+    $webhookEndpoint = cleanEnv('BUDDYBOSS_PUBLIC_URL');
+    if ($webhookEndpoint === '') {
+        $webhookEndpoint = 'https://fluxocursos.com.br/api/webhook-buddyboss.php';
+    } else {
+        $webhookEndpoint = rtrim($webhookEndpoint, '/') . '/api/webhook-buddyboss.php';
+    }
 }
 
 $limit = isset($_GET['limit']) ? max(0, (int) $_GET['limit']) : 0;
 $offset = isset($_GET['offset']) ? max(0, (int) $_GET['offset']) : 0;
 $dryRun = !empty($_GET['dry_run']);
 $perPage = 50;
+$role = cleanEnv('BUDDYBOSS_ROLE') ?: 'subscriber';
 
-$tracker = loadSyncTracker();
 $processed = 0;
 $updated = 0;
 $skipped = 0;
@@ -182,18 +170,26 @@ $samples = [];
 try {
     $page = 1;
     while (true) {
-        $members = fetchMembers($baseUrl, $username, $password, $page, $perPage);
-        if (empty($members)) {
+        $url = sprintf('%s/wp-json/wp/v2/users?per_page=%d&page=%d&context=edit&roles=%s', rtrim($baseUrl, '/'), $perPage, $page, $role);
+        $r = curlGet($url, $username, $password);
+        if ($r['status'] === 400 && strpos($r['body'], 'rest_invalid_param') !== false) {
+            $url = sprintf('%s/wp-json/wp/v2/users?per_page=%d&page=%d&context=edit', rtrim($baseUrl, '/'), $perPage, $page);
+            $r = curlGet($url, $username, $password);
+        }
+        if ($r['status'] >= 400) {
+            throw new RuntimeException('WP REST status ' . $r['status'] . ': ' . substr($r['body'], 0, 200));
+        }
+        $users = json_decode($r['body'], true);
+        if (!is_array($users)) {
+            throw new RuntimeException('WP REST resposta invalida: ' . substr($r['body'], 0, 200));
+        }
+        if (empty($users)) {
             break;
         }
-        foreach ($members as $member) {
-            if (!is_array($member) && !is_object($member)) {
-                continue;
-            }
-            $memberArr = is_object($member) ? (array) $member : $member;
-            $memberId = (int) ($memberArr['id'] ?? 0);
-            $email = (string) ($memberArr['email'] ?? '');
-            if ($memberId <= 0 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        foreach ($users as $user) {
+            $userId = (int) ($user['id'] ?? 0);
+            $email = (string) ($user['email'] ?? '');
+            if ($userId <= 0 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $skipped++;
                 continue;
             }
@@ -206,37 +202,40 @@ try {
                 break 2;
             }
 
-            $xprofile = $memberArr['xprofile'] ?? [];
+            $xprofile = fetchMemberProfile($baseUrl, $username, $password, $userId);
+
+            $name = trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''));
+            if ($name === '') {
+                $name = (string) ($user['name'] ?? $user['slug'] ?? '');
+            }
 
             $payload = [
                 'event' => 'comunidade_importacao_inicial',
-                'user_id' => $memberId,
+                'user_id' => $userId,
                 'community_slug' => cleanEnv('BUDDYBOSS_COMMUNITY_SLUG') ?: 'clube-do-doppler',
                 'customer' => [
-                    'name' => (string) ($memberArr['name'] ?? $memberArr['profile_name'] ?? ''),
+                    'name' => $name,
                     'email' => $email,
-                    'phone' => (string) ((is_array($memberArr['meta'] ?? null) ? $memberArr['meta']['phone'] ?? '' : '') ?: ''),
+                    'phone' => (string) ($user['meta']['phone'] ?? ''),
                 ],
                 'profile' => [
-                    'especialidade' => extractXprofileValue($xprofile, ['Especialidad', 'Especialidade']),
-                    'cidade' => extractXprofileValue($xprofile, ['Ciudad', 'Cidade']),
-                    'crm' => extractXprofileValue($xprofile, ['CRM', 'Registro']),
-                    'telefone' => extractXprofileValue($xprofile, ['Teléfono', 'Telefone', 'Phone']),
+                    'especialidade' => getXprofileValue($xprofile, ['Especialidad', 'Especialidade']),
+                    'cidade' => getXprofileValue($xprofile, ['Ciudad', 'Cidade']),
+                    'crm' => getXprofileValue($xprofile, ['CRM', 'Registro']),
+                    'telefone' => getXprofileValue($xprofile, ['Teléfono', 'Telefone', 'Phone']),
                 ],
             ];
 
             if (!$dryRun) {
                 $result = postWebhook($webhookEndpoint, $secret, $payload);
                 if ($result['status'] >= 200 && $result['status'] < 300) {
-                    $tracker[(string) $memberId] = time();
                     $updated++;
                 } else {
                     $errors++;
                 }
-
                 if (count($samples) < 3) {
                     $samples[] = [
-                        'member_id' => $memberId,
+                        'user_id' => $userId,
                         'email' => $email,
                         'status' => $result['status'],
                         'body' => substr((string) ($result['body'] ?? $result['error'] ?? ''), 0, 200),
@@ -246,15 +245,12 @@ try {
             } else {
                 $updated++;
                 if (count($samples) < 3) {
-                    $samples[] = ['member_id' => $memberId, 'email' => $email, 'dry_run' => true];
+                    $samples[] = ['user_id' => $userId, 'email' => $email, 'dry_run' => true];
                 }
             }
             $processed++;
         }
         $page++;
-    }
-    if (!$dryRun) {
-        saveSyncTracker($tracker);
     }
 } catch (Throwable $error) {
     respond(500, false, 'Erro durante sincronizacao: ' . $error->getMessage(), [
