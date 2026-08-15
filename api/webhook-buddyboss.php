@@ -35,7 +35,7 @@ if (!is_array($payload)) {
 }
 
 $event = (string) ($payload['event'] ?? '');
-$allowedEvents = ['cadastro_comunidade', 'perfil_atualizado_comunidade'];
+$allowedEvents = ['cadastro_comunidade', 'perfil_atualizado_comunidade', 'comunidade_importacao_inicial'];
 if (!in_array($event, $allowedEvents, true)) {
     respond(422, false, 'Evento não suportado.');
 }
@@ -62,6 +62,10 @@ try {
                 break;
             case 'perfil_atualizado_comunidade':
                 $tags[] = 'comunidade_perfil_atualizado';
+                break;
+            case 'comunidade_importacao_inicial':
+                $tags[] = 'comunidade_clube_doppler';
+                $tags[] = 'comunidade_importacao_em_massa';
                 break;
         }
 
