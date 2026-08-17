@@ -6,18 +6,17 @@
     var inputNome = document.getElementById('download-nome');
     var status = document.getElementById('download-status');
     var form = document.getElementById('download-form');
-    var pendingFile = null;
 
     if (!modal || !form) {
         return;
     }
 
-    function openModal(material, file) {
+    function openModal(material) {
         inputMaterial.value = material;
-        pendingFile = file;
         status.textContent = '';
         form.reset();
         inputMaterial.value = material;
+        form.querySelector('button[type="submit"]').disabled = false;
         modal.classList.add('is-open');
         modal.setAttribute('aria-hidden', 'false');
         setTimeout(function () { inputNome.focus(); }, 50);
@@ -26,12 +25,11 @@
     function closeModal() {
         modal.classList.remove('is-open');
         modal.setAttribute('aria-hidden', 'true');
-        pendingFile = null;
     }
 
     document.querySelectorAll('.bt-download').forEach(function (button) {
         button.addEventListener('click', function () {
-            openModal(button.dataset.material || '', button.dataset.file || '');
+            openModal(button.dataset.material || '');
         });
     });
 
@@ -73,8 +71,13 @@
                 throw new Error(data.message || 'Não foi possível liberar o download.');
             }
             status.textContent = data.message || 'Download liberado.';
-            if (pendingFile) {
-                window.location.href = pendingFile;
+            if (data.downloadUrl) {
+                var downloadLink = document.createElement('a');
+                downloadLink.href = data.downloadUrl;
+                downloadLink.download = data.downloadName || '';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                downloadLink.remove();
             }
         } catch (error) {
             status.textContent = error.message;
