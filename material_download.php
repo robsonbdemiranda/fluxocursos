@@ -31,6 +31,8 @@ $nome = trim((string) ($_POST['nome'] ?? ''));
 $email = trim((string) ($_POST['email'] ?? ''));
 $telefone = trim((string) ($_POST['telefone'] ?? ''));
 $material = trim((string) ($_POST['material'] ?? ''));
+$privacyAccepted = (string) ($_POST['privacidade'] ?? '') === '1';
+$marketingConsent = (string) ($_POST['consentimento_marketing'] ?? '') === '1';
 
 $materials = [
     'tabela-cim-aric' => 'Tabela_CIM_ARIC_Fluxo_Cursos.pdf',
@@ -47,6 +49,9 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL) || preg_match('/[\r\n]/', $email)
 }
 if (textLength($telefone) > 30 || preg_match('/[\r\n]/', $telefone)) {
     respond(422, false, 'Informe um telefone válido.');
+}
+if (!$privacyAccepted) {
+    respond(422, false, 'Confirme que leu a Política de Privacidade para continuar.');
 }
 if (!isset($materials[$material])) {
     respond(422, false, 'Material inválido.');
@@ -70,12 +75,16 @@ try {
     $client = MauticClient::fromEnvironment();
     if ($client->isConfigured()) {
         [$firstname, $lastname] = splitName($nome);
+        $tags = ['download_material', 'download_' . sanitizeTag($material), 'site-fluxocursos'];
+        if ($marketingConsent) {
+            $tags[] = 'consentimento_marketing';
+        }
         $client->upsertContact([
             'email' => $email,
             'firstname' => $firstname,
             'lastname' => $lastname,
             'phone' => $telefone,
-            'tags' => ['download_material', 'download_' . sanitizeTag($material), 'site-fluxocursos'],
+            'tags' => $tags,
         ]);
     }
 } catch (Throwable $error) {

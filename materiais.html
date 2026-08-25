@@ -159,8 +159,8 @@
     <div class="fluxo-lead-modal" id="download-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="download-modal-titulo">
         <div class="fluxo-lead-modal__dialog" role="document">
             <button type="button" class="fluxo-lead-modal__close" data-modal-close aria-label="Fechar">&times;</button>
-            <h2 class="fluxo-lead-modal__title" id="download-modal-titulo">Receba o material no seu e-mail</h2>
-            <p class="fluxo-lead-modal__lead">Informe seus dados para liberar o download. Você também receberá novidades técnicas.</p>
+            <h2 class="fluxo-lead-modal__title" id="download-modal-titulo">Baixe o material gratuitamente</h2>
+            <p class="fluxo-lead-modal__lead">Informe seus dados para liberar o download.</p>
             <form id="download-form" novalidate>
                 <input type="hidden" name="website" value="" autocomplete="off">
                 <input type="hidden" name="material" id="download-material" value="">
@@ -172,6 +172,14 @@
                 </label>
                 <label class="fluxo-lead-modal__field" for="download-telefone">Telefone
                     <input class="fluxo-lead-modal__input" type="tel" id="download-telefone" name="telefone" autocomplete="tel" maxlength="30">
+                </label>
+                <label class="fluxo-lead-modal__consent">
+                    <input class="fluxo-lead-modal__checkbox" type="checkbox" name="privacidade" value="1" required>
+                    <span>Li a <a href="politica-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a> e estou ciente do tratamento dos meus dados para receber o material solicitado. *</span>
+                </label>
+                <label class="fluxo-lead-modal__consent">
+                    <input class="fluxo-lead-modal__checkbox" type="checkbox" name="consentimento_marketing" value="1">
+                    <span>Quero receber conteúdos técnicos, novidades e informações sobre cursos da Fluxo Cursos.</span>
                 </label>
                 <button class="fluxo-lead-modal__submit" type="submit">Liberar download</button>
                 <p class="fluxo-lead-modal__status" id="download-status" role="status" aria-live="polite"></p>

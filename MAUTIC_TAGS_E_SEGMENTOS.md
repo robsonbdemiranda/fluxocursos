@@ -12,6 +12,7 @@ Lista completa de tags e segmentos para configurar no Mautic após a implantacao
 | Lista de interesse | `lista_espera_<slug>` | Captura em `lista_interesse.php` (slug do curso) |
 | Download de material | `download_material` | Captura em `material_download.php` |
 | Download de material | `download_<slug>` | Captura em `material_download.php` (slug do material) |
+| Consentimento de marketing | `consentimento_marketing` | Aplicada no download somente quando o contato autoriza comunicações |
 | Pop-up exit-intent | `exit_intent_fluxo` | Quando o JS `exit-intent.js` capturar o lead (futuro) |
 
 ## Tags para criar manualmente em Settings -> Tags
@@ -21,6 +22,7 @@ lead_contato_site
 site-fluxocursos
 lista_espera
 download_material
+consentimento_marketing
 exit_intent_fluxo
 ```
 
@@ -43,6 +45,10 @@ As tags filhas (`lista_espera_<slug>` e `download_<slug>`) sao criadas automatic
 ### leads_download_tabela_cim
 - Regra: tag is `download_tabela-cim-aric` OR tag is `download_tabela-cim-caps` OR tag is `download_tabela-cim-elsa` OR tag is `download_tabela-cim-mesa`
 - Uso: identificar leads com interesse em normas de referencia para CIM.
+
+### leads_download_tabela_cim_optin
+- Regra: tag is `consentimento_marketing` AND (tag is `download_tabela-cim-aric` OR tag is `download_tabela-cim-caps` OR tag is `download_tabela-cim-elsa` OR tag is `download_tabela-cim-mesa`)
+- Uso: fonte das campanhas de nutricao para contatos que autorizaram comunicacoes.
 
 ### leads_captados_blog
 - Regra: utm_source is `blog-organico` (aplicado via GTM/UTM no Mautic)
@@ -74,6 +80,7 @@ As tags filhas (`lista_espera_<slug>` e `download_<slug>`) sao criadas automatic
    - `site-fluxocursos`
    - `download_material`
    - `download_tabela-cim-<slug>`
+   - `consentimento_marketing`, somente quando a opcao de receber comunicacoes for marcada
 6. Em **Segments**, abrir `leads_site_fluxo` e confirmar que o lead aparece.
 
 ## Eventos para campanhas futuras

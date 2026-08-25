@@ -22,6 +22,8 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
     position: relative;
     font-family: 'Montserrat', sans-serif;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
 }
 
 .fluxo-lead-modal__close {
@@ -70,6 +72,29 @@
     outline: none;
     border-color: #4ebcc2;
     box-shadow: 0 0 0 3px rgba(78, 188, 194, 0.2);
+}
+
+.fluxo-lead-modal__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 12px;
+    color: #4a4a4a;
+    font-size: 0.75em;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.fluxo-lead-modal__checkbox {
+    flex: 0 0 auto;
+    margin-top: 3px;
+    accent-color: #4ebcc2;
+}
+
+.fluxo-lead-modal__consent a {
+    color: #032842;
+    font-weight: 600;
+    text-decoration: underline !important;
 }
 
 .fluxo-lead-modal__submit {
