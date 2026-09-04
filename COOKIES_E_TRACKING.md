@@ -5,7 +5,7 @@ O site respeita as escolhas de cookies do visitante. Tags de marketing e analyti
 ## Como funciona
 
 1. Cada pagina HTML inclui um placeholder (`#fluxo-consent-placeholder`) e o loader `js/consent-loader.js`.
-2. O loader busca `md/partials/consent-snippet.html`, que renderiza o banner de cookies, o helper `window.fluxoConsent` e os scripts `tracking.js` e `cookies.js`.
+2. O loader busca `md/partials/consent-snippet.html`, que contem somente o HTML do banner, e carrega `css/cookies.css`, `tracking.js` e `cookies.js` por elementos DOM executaveis.
 3. `js/tracking.js` expoe:
    - `window.activateAnalytics()`: dispara GTM e Hotjar.
    - `window.activateMarketing()`: reservado para integracoes futuras.

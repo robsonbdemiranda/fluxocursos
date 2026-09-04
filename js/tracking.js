@@ -29,8 +29,21 @@
         }
     }
 
-    function pushConsent(preferences) {
+    function setGoogleConsent(command, preferences) {
         window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function () {
+            window.dataLayer.push(arguments);
+        };
+        window.gtag("consent", command, {
+            analytics_storage: preferences.analytics ? "granted" : "denied",
+            ad_storage: preferences.marketing ? "granted" : "denied",
+            ad_user_data: preferences.marketing ? "granted" : "denied",
+            ad_personalization: preferences.marketing ? "granted" : "denied"
+        });
+    }
+
+    function pushConsent(preferences) {
+        setGoogleConsent("update", preferences);
         window.dataLayer.push({
             event: "fluxo_consent_update",
             consent_analytics: !!preferences.analytics,
@@ -115,7 +128,8 @@
     }
 
     function applyConsent(consent) {
-        if (consent.analytics) window.activateAnalytics();
+        if (consent.analytics || consent.marketing) activateGtm();
+        if (consent.analytics) activateHotjar();
         if (consent.marketing) window.activateMarketing();
     }
 
@@ -128,7 +142,7 @@
         },
         clear: function () {
             clearStored(CONSENT_KEY);
-            window.dataLayer = window.dataLayer || [];
+            setGoogleConsent("update", { analytics: false, marketing: false });
             window.dataLayer.push({
                 event: "fluxo_consent_clear",
                 consent_analytics: false,
@@ -184,8 +198,11 @@
         }
     };
 
+    setGoogleConsent("default", { analytics: false, marketing: false });
+
     var existingConsent = readConsent();
     if (existingConsent) {
+        pushConsent(existingConsent);
         applyConsent(existingConsent);
     }
 }());
