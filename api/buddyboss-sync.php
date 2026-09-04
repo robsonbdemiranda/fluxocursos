@@ -24,6 +24,28 @@ function cleanEnv(string $name): string
     return trim($value);
 }
 
+function getAuthorizationHeader(): string
+{
+    return trim((string) ($_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? ''));
+}
+
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    header('Allow: POST');
+    respond(405, false, 'Metodo nao permitido.');
+}
+
+$syncToken = cleanEnv('BUDDYBOSS_SYNC_TOKEN');
+if ($syncToken === '') {
+    respond(500, false, 'Token de sincronizacao nao configurado no servidor.');
+}
+
+$authorization = getAuthorizationHeader();
+$prefix = 'Bearer ';
+if (stripos($authorization, $prefix) !== 0 || !hash_equals($syncToken, trim(substr($authorization, strlen($prefix))))) {
+    header('WWW-Authenticate: Bearer');
+    respond(401, false, 'Nao autorizado.');
+}
+
 function curlGet(string $url, string $username, string $password): array
 {
     $ch = curl_init($url);
@@ -297,7 +319,6 @@ try {
                 if (count($samples) < 3) {
                     $samples[] = [
                         'user_id' => $userId,
-                        'email' => $email,
                         'status' => $result['status'],
                         'body' => substr((string) ($result['body'] ?? $result['error'] ?? ''), 0, 200),
                     ];
@@ -306,7 +327,7 @@ try {
             } else {
                 $updated++;
                 if (count($samples) < 3) {
-                    $samples[] = ['user_id' => $userId, 'email' => $email, 'dry_run' => true];
+                    $samples[] = ['user_id' => $userId, 'dry_run' => true];
                 }
             }
             $processed++;

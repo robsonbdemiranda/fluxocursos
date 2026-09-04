@@ -21,6 +21,7 @@ Esta semana integra a comunidade em `https://app.clubedodoppler.com.br` (BuddyBo
 ## Arquivos criados
 
 - `api/webhook-buddyboss.php` - endpoint receptor na vitrine.
+- `api/buddyboss-sync.php` - sincronização autenticada dos membros existentes.
 - `wp-plugin/fluxo-buddyboss-mautic/fluxo-buddyboss-mautic.php` - plugin WordPress.
 - `comunidade.html` - página institucional da comunidade no site.
 - `css/comunidade.css` - estilo da página.
@@ -97,9 +98,28 @@ Como o BuddyBoss não tem webhook de saída, os 900 membros históricos precisam
 
 A senha gerada no pré-requisito será usada aqui.
 
+Na vitrine, configure as variáveis:
+
+```env
+BUDDYBOSS_SYNC_TOKEN=<token longo, aleatório e exclusivo>
+BUDDYBOSS_BASE_URL=https://app.clubedodoppler.com.br
+BUDDYBOSS_USERNAME=<usuario WordPress>
+BUDDYBOSS_APP_PASSWORD=<Application Password>
+BUDDYBOSS_COMMUNITY_SLUG=clube-do-doppler
+```
+
+O `BUDDYBOSS_SYNC_TOKEN` protege apenas a execução administrativa da importação e deve ser diferente de `FLUXO_WEBHOOK_SECRET`.
+
 ### Passo 2 - Executar sincronização
 
-Implemente um pequeno script PHP que consome `/wp-json/buddyboss/v1/members` em lotes. Posso implementar este script quando você quiser.
+Execute somente por `POST`, enviando o token no cabeçalho `Authorization`. Comece com uma amostra em modo de simulação:
+
+```powershell
+$token = '<BUDDYBOSS_SYNC_TOKEN>'
+Invoke-RestMethod -Method Post -Uri 'https://fluxocursos.com.br/api/buddyboss-sync.php?dry_run=1&limit=10' -Headers @{ Authorization = "Bearer $token" }
+```
+
+Depois da conferência, retire `dry_run=1` e ajuste o `limit`. Use `offset` para continuar de um ponto específico. O endpoint não retorna e-mails nas amostras de execução.
 
 ## Tags geradas
 
