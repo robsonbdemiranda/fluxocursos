@@ -8,11 +8,14 @@ Lista completa de tags e segmentos para configurar no Mautic após a implantacao
 |---|---|---|
 | Formulario de contato | `lead_contato_site` | Ao receber mensagem em `enviar_email.php` |
 | Formulario de contato | `site-fluxocursos` | Em todos os leads vindos do site |
-| Lista de interesse | `lista_espera` | Captura em `lista_interesse.php` |
+| Lista de interesse | `lista_espera` | Captura de cursos futuros; mantida para compatibilidade com campanhas existentes |
+| Lista de interesse | `lista_espera_curso` | Captura de cursos futuros |
+| Lista de interesse | `lista_espera_material` | Captura de materiais futuros |
 | Lista de interesse | `lista_espera_<slug>` | Captura em `lista_interesse.php` (slug do curso) |
+| Lista de interesse | `site-fluxocursos` | Todas as capturas de cursos e materiais futuros |
 | Download de material | `download_material` | Captura em `material_download.php` |
 | Download de material | `download_<slug>` | Captura em `material_download.php` (slug do material) |
-| Consentimento de marketing | `consentimento_marketing` | Aplicada no download somente quando o contato autoriza comunicações |
+| Consentimento de marketing | `consentimento_marketing` | Aplicada no download ou lista de interesse somente quando o contato autoriza comunicações |
 | Pop-up exit-intent | `exit_intent_fluxo` | Quando o JS `exit-intent.js` capturar o lead (futuro) |
 
 ## Tags para criar manualmente em Settings -> Tags
@@ -28,6 +31,8 @@ exit_intent_fluxo
 
 As tags filhas (`lista_espera_<slug>` e `download_<slug>`) sao criadas automaticamente pelo PHP quando o lead captura um item pela primeira vez.
 
+Os materiais futuros usam `lista_espera_material` com `lista_espera_cases-clinicos-comentados` ou `lista_espera_aula-gravada-doppler`. Eles não recebem `lista_espera`, evitando sua entrada nas campanhas de abertura de turmas.
+
 ## Segmentos para criar em Segments -> New
 
 ### leads_site_fluxo
@@ -35,12 +40,16 @@ As tags filhas (`lista_espera_<slug>` e `download_<slug>`) sao criadas automatic
 - Uso: monitorar volume total de leads vindos do site.
 
 ### leads_qualificados
-- Regra: tag is `lista_espera` OR tag is `download_material`
+- Regra: tag is `lista_espera` OR tag is `lista_espera_material` OR tag is `download_material`
 - Uso: leads que demonstraram interesse alem do contato simples.
 
 ### leads_lista_espera_cursos
-- Regra: tag is `lista_espera`
+- Regra: tag is `lista_espera_curso`
 - Uso: acionar fluxo de aviso de turma aberta.
+
+### leads_lista_espera_materiais
+- Regra: tag is `lista_espera_material`
+- Uso: avisar quando cases clínicos ou aulas gratuitas forem publicados.
 
 ### leads_download_tabela_cim
 - Regra: tag is `download_tabela-cim-aric` OR tag is `download_tabela-cim-caps` OR tag is `download_tabela-cim-elsa` OR tag is `download_tabela-cim-mesa`

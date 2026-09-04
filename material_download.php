@@ -124,7 +124,7 @@ function readUtmAttributes(): array
         if ($raw === '' || strlen($raw) > 100 || preg_match('/[\r\n]/', $raw)) {
             continue;
         }
-        $attributes[$key] = sanitizeTag($raw);
+        $attributes[$key] = trim($raw);
     }
     return $attributes;
 }

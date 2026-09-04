@@ -385,6 +385,7 @@
             <form id="lista-interesse-form" novalidate>
                 <input type="hidden" name="website" value="" autocomplete="off">
                 <input type="hidden" name="curso" id="lista-interesse-curso" value="">
+                <input type="hidden" name="origem" value="cursos">
                 <label class="fluxo-lead-modal__field" for="lista-interesse-nome">Nome
                     <input class="fluxo-lead-modal__input" type="text" id="lista-interesse-nome" name="nome" autocomplete="name" maxlength="100" required>
                 </label>
@@ -393,6 +394,14 @@
                 </label>
                 <label class="fluxo-lead-modal__field" for="lista-interesse-telefone">Telefone
                     <input class="fluxo-lead-modal__input" type="tel" id="lista-interesse-telefone" name="telefone" autocomplete="tel" maxlength="30">
+                </label>
+                <label class="fluxo-lead-modal__consent">
+                    <input class="fluxo-lead-modal__checkbox" type="checkbox" name="privacidade" value="1" required>
+                    <span>Li a <a href="politica-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a> e estou ciente do tratamento dos meus dados para receber o aviso solicitado. *</span>
+                </label>
+                <label class="fluxo-lead-modal__consent">
+                    <input class="fluxo-lead-modal__checkbox" type="checkbox" name="consentimento_marketing" value="1">
+                    <span>Quero receber conteúdos técnicos, novidades e informações sobre cursos da Fluxo Cursos.</span>
                 </label>
                 <button class="fluxo-lead-modal__submit" type="submit">Enviar interesse</button>
                 <p class="fluxo-lead-modal__status" id="lista-interesse-status" role="status" aria-live="polite"></p>
@@ -432,82 +441,7 @@
     <script src="js/exit-intent.js"></script>
     <script>document.getElementById('ano-atual').textContent = new Date().getFullYear();</script>
 
-    <script>
-        (function () {
-            var modal = document.getElementById('lista-interesse-modal');
-            var inputCurso = document.getElementById('lista-interesse-curso');
-            var inputNome = document.getElementById('lista-interesse-nome');
-            var inputEmail = document.getElementById('lista-interesse-email');
-            var status = document.getElementById('lista-interesse-status');
-            var form = document.getElementById('lista-interesse-form');
-
-            function openModal(curso) {
-                inputCurso.value = curso;
-                status.textContent = '';
-                form.reset();
-                inputCurso.value = curso;
-                modal.classList.add('is-open');
-                modal.setAttribute('aria-hidden', 'false');
-                setTimeout(function () { inputNome.focus(); }, 50);
-            }
-
-            function closeModal() {
-                modal.classList.remove('is-open');
-                modal.setAttribute('aria-hidden', 'true');
-            }
-
-            document.querySelectorAll('.bt-list-interesse').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    openModal(button.dataset.curso || 'Curso');
-                });
-            });
-
-            modal.addEventListener('click', function (event) {
-                if (event.target === modal) {
-                    closeModal();
-                }
-            });
-
-            modal.querySelectorAll('[data-modal-close]').forEach(function (button) {
-                button.addEventListener('click', closeModal);
-            });
-
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape' && modal.classList.contains('is-open')) {
-                    closeModal();
-                }
-            });
-
-            form.addEventListener('submit', async function (event) {
-                event.preventDefault();
-                if (!form.checkValidity()) {
-                    form.reportValidity();
-                    return;
-                }
-                var submitButton = form.querySelector('button[type="submit"]');
-                submitButton.disabled = true;
-                status.textContent = 'Enviando...';
-                try {
-                    var response = await fetch('lista_interesse.php', {
-                        method: 'POST',
-                        body: new FormData(form),
-                        headers: { 'Accept': 'application/json' }
-                    });
-                    var data = await response.json();
-                    if (!response.ok || !data.success) {
-                        throw new Error(data.message || 'Não foi possível registrar seu interesse.');
-                    }
-                    form.reset();
-                    inputCurso.value = '';
-                    status.textContent = data.message || 'Inscrição registrada.';
-                } catch (error) {
-                    status.textContent = error.message;
-                } finally {
-                    submitButton.disabled = false;
-                }
-            });
-        })();
-    </script>
+    <script src="js/lista-interesse.js"></script>
 
     </body>
 

@@ -181,6 +181,38 @@
         </div>
     </div>
 
+    <div class="fluxo-lead-modal" id="lista-interesse-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lista-interesse-titulo">
+        <div class="fluxo-lead-modal__dialog" role="document">
+            <button type="button" class="fluxo-lead-modal__close" data-modal-close aria-label="Fechar">&times;</button>
+            <h2 class="fluxo-lead-modal__title" id="lista-interesse-titulo">Quero ser avisado</h2>
+            <p class="fluxo-lead-modal__lead">Informe seus dados para receber um aviso quando este material estiver disponível.</p>
+            <form id="lista-interesse-form" novalidate>
+                <input type="hidden" name="website" value="" autocomplete="off">
+                <input type="hidden" name="curso" id="lista-interesse-curso" value="">
+                <input type="hidden" name="origem" value="materiais">
+                <label class="fluxo-lead-modal__field" for="lista-interesse-nome">Nome
+                    <input class="fluxo-lead-modal__input" type="text" id="lista-interesse-nome" name="nome" autocomplete="name" maxlength="100" required>
+                </label>
+                <label class="fluxo-lead-modal__field" for="lista-interesse-email">E-mail
+                    <input class="fluxo-lead-modal__input" type="email" id="lista-interesse-email" name="email" autocomplete="email" maxlength="254" required>
+                </label>
+                <label class="fluxo-lead-modal__field" for="lista-interesse-telefone">Telefone
+                    <input class="fluxo-lead-modal__input" type="tel" id="lista-interesse-telefone" name="telefone" autocomplete="tel" maxlength="30">
+                </label>
+                <label class="fluxo-lead-modal__consent">
+                    <input class="fluxo-lead-modal__checkbox" type="checkbox" name="privacidade" value="1" required>
+                    <span>Li a <a href="politica-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a> e estou ciente do tratamento dos meus dados para receber o aviso solicitado. *</span>
+                </label>
+                <label class="fluxo-lead-modal__consent">
+                    <input class="fluxo-lead-modal__checkbox" type="checkbox" name="consentimento_marketing" value="1">
+                    <span>Quero receber conteúdos técnicos, novidades e informações sobre cursos da Fluxo Cursos.</span>
+                </label>
+                <button class="fluxo-lead-modal__submit" type="submit">Enviar interesse</button>
+                <p class="fluxo-lead-modal__status" id="lista-interesse-status" role="status" aria-live="polite"></p>
+            </form>
+        </div>
+    </div>
+
     <footer>
         <div class="rodape">
             <img src="img/logocolorida.png" alt="Fluxo Cursos">
@@ -205,6 +237,7 @@
     <script>document.getElementById('ano-atual').textContent = new Date().getFullYear();</script>
     <script src="js/exit-intent.js"></script>
     <script src="js/materiais.js"></script>
+    <script src="js/lista-interesse.js"></script>
     </body>
 
 </html>

@@ -54,8 +54,6 @@
         });
     });
 
-    document.querySelectorAll('.materiais-hero .bt-list-interesse').forEach(function () {});
-
     modal.addEventListener('click', function (event) {
         if (event.target === modal) {
             closeModal();
@@ -81,6 +79,7 @@
         var submitButton = form.querySelector('button[type="submit"]');
         submitButton.disabled = true;
         status.textContent = 'Liberando download...';
+        syncUtmFields();
         try {
             var response = await fetch('material_download.php', {
                 method: 'POST',

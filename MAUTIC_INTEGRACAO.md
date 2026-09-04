@@ -32,19 +32,21 @@ MAUTIC_PUBLIC_CLIENT_SECRET=<Client Secret OAuth2>
 | Origem | Tag |
 |---|---|
 | Formulário de contato | `lead_contato_site`, `site-fluxocursos` |
-| Lista de interesse | `lista_espera`, `site-fluxocursos`, `lista_espera_<slug>` |
+| Lista de interesse em curso | `lista_espera`, `lista_espera_curso`, `site-fluxocursos`, `lista_espera_<slug>` |
+| Lista de interesse em material | `lista_espera_material`, `site-fluxocursos`, `lista_espera_<slug>` |
 
 ## Endpoints
 
 - `enviar_email.php` recebe o formulário de contato e sincroniza com o Mautic.
-- `lista_interesse.php` recebe capturas de cursos em "EM BREVE" e sincroniza com o Mautic.
+- `lista_interesse.php` recebe capturas de cursos e materiais em "EM BREVE", exige aceite da Política de Privacidade e sincroniza com o Mautic.
 
 ## QA
 
 1. Acesse `https://fluxocursos.com.br/?utm_source=teste` em janela anônima.
 2. Verifique no Mautic, em **Contacts**, se um novo contato apareceu com a tag `site-fluxocursos`.
-3. Em `cursos.html`, abra um modal "EM BREVE" e submeta o formulário.
-4. Confirme se o contato recebeu a tag `lista_espera_<slug>`.
+3. Em `cursos.html` ou `materiais.html`, abra um modal "EM BREVE" e submeta o formulário.
+4. Confirme se o contato recebeu `lista_espera_<slug>`, a tag de tipo (`lista_espera_curso` ou `lista_espera_material`) e `site-fluxocursos`.
+5. Confirme que `consentimento_marketing` aparece somente quando o opt-in foi marcado.
 
 ## Boas práticas
 

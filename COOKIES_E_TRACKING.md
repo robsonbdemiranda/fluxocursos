@@ -22,7 +22,7 @@ Apos o aceite, o `dataLayer` recebe `event: fluxo_consent_update` para que tags 
 
 ## UTMs em formularios
 
-Os formularios propagam UTMs para o backend por meio de `window.fluxoFormContext.utm()`. O backend (`material_download.php`, `lista_interesse.php`, `enviar_email.php`) recebe os parametros `utm_source`, `utm_medium`, `utm_campaign`, `utm_term` e `utm_content` via `POST` e os encaminha ao Mautic como atributos do contato.
+Os formularios de download e lista de interesse propagam UTMs para o backend por meio de `window.fluxoFormContext.utm()`. Os endpoints `material_download.php` e `lista_interesse.php` recebem `utm_source`, `utm_medium`, `utm_campaign`, `utm_term` e `utm_content` via `POST` e os encaminham ao Mautic como atributos do contato.
 
 ## Como validar
 

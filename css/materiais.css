@@ -58,7 +58,8 @@
     background: #f5fafb;
 }
 
-.bt-download {
+.bt-download,
+.bt-list-interesse {
     margin-top: auto;
     background: #4ebcc2;
     border: 1px solid #4ebcc2;
@@ -72,7 +73,9 @@
 }
 
 .bt-download:hover,
-.bt-download:focus {
+.bt-download:focus,
+.bt-list-interesse:hover,
+.bt-list-interesse:focus {
     background: #032842;
     color: #fff;
 }

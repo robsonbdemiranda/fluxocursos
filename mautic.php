@@ -74,7 +74,17 @@ final class MauticClient
             $body['tags'] = $this->normalizeTags($payload['tags']);
         }
 
-        return $this->request('POST', '/api/contacts/new', $body);
+        $response = $this->request('POST', '/api/contacts/new', $body);
+        $utm = $this->extractUtm($payload);
+        if ($utm !== []) {
+            $contactId = (int) ($response['contact']['id'] ?? 0);
+            if ($contactId <= 0) {
+                throw new RuntimeException('Mautic não retornou o contato para registrar UTMs.');
+            }
+            $this->request('POST', '/api/contacts/' . $contactId . '/utm/add', $utm);
+        }
+
+        return $response;
     }
 
     public function findContactByEmail(string $email): ?array
@@ -107,6 +117,17 @@ final class MauticClient
             }
         }
         return $output;
+    }
+
+    private function extractUtm(array $payload): array
+    {
+        $utm = [];
+        foreach (['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'] as $field) {
+            if (isset($payload[$field]) && $payload[$field] !== '') {
+                $utm[$field] = (string) $payload[$field];
+            }
+        }
+        return $utm;
     }
 
     private function ensureToken(): void
@@ -198,6 +219,9 @@ final class MauticClient
         }
 
         $data = json_decode($raw, true);
+        if ($status >= 400) {
+            throw new RuntimeException('Mautic retornou HTTP ' . $status . '.');
+        }
         if (!is_array($data)) {
             throw new RuntimeException('Resposta inválida do Mautic.');
         }

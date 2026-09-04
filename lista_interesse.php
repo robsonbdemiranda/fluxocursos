@@ -54,6 +54,32 @@ if (textLength($telefone) > 30 || preg_match('/[\r\n]/', $telefone)) {
     respond(422, false, 'Telefone inválido.');
 }
 $curso = field('curso', 2, 80);
+$interests = [
+    'Ecovasc Teórico' => ['slug' => 'ecovasc-te-rico', 'type' => 'curso'],
+    'Ecovasc Prático' => ['slug' => 'ecovasc-pr-tico', 'type' => 'curso'],
+    'Duplexweb Venoso' => ['slug' => 'duplexweb-venoso', 'type' => 'curso'],
+    'Duplexweb Fleboestética' => ['slug' => 'duplexweb-fleboest-tica', 'type' => 'curso'],
+    'Duplexweb Arterial Básico' => ['slug' => 'duplexweb-arterial-b-sico', 'type' => 'curso'],
+    'Duplexweb Arterial Avançado' => ['slug' => 'duplexweb-arterial-avan-ado', 'type' => 'curso'],
+    'Duplexweb Vasos Arteriais Abdominais' => ['slug' => 'duplexweb-vasos-arteriais-abdominais', 'type' => 'curso'],
+    'Duplexweb Vasos Venosos Abdominais' => ['slug' => 'duplexweb-vasos-venosos-abdominais', 'type' => 'curso'],
+    'Duplexweb Procedimentos Ecoguiados' => ['slug' => 'duplexweb-procedimentos-ecoguiados', 'type' => 'curso'],
+    'Duplexweb Acesso para Hemodiálise' => ['slug' => 'duplexweb-acesso-para-hemodi-lise', 'type' => 'curso'],
+    'Fellowship em Ecografia Vascular com Doppler' => ['slug' => 'fellowship-em-ecografia-vascular-com-doppler', 'type' => 'curso'],
+    'Cursos Imersivos de curta duração' => ['slug' => 'cursos-imersivos-de-curta-dura-o', 'type' => 'curso'],
+    'Mini-fellowship Doppler' => ['slug' => 'mini-fellowship-doppler', 'type' => 'curso'],
+    'Cases Clínicos Comentados' => ['slug' => 'cases-clinicos-comentados', 'type' => 'material'],
+    'Aula Gravada de Doppler' => ['slug' => 'aula-gravada-doppler', 'type' => 'material'],
+];
+if (!isset($interests[$curso])) {
+    respond(422, false, 'Interesse inválido.');
+}
+$privacyAccepted = (string) ($_POST['privacidade'] ?? '') === '1';
+$marketingConsent = (string) ($_POST['consentimento_marketing'] ?? '') === '1';
+if (!$privacyAccepted) {
+    respond(422, false, 'Confirme que leu a Política de Privacidade para continuar.');
+}
+$interest = $interests[$curso];
 $origem = trim((string) ($_POST['origem'] ?? ''));
 if (preg_match('/[\r\n]/', $origem)) {
     respond(422, false, 'Origem inválida.');
@@ -86,7 +112,15 @@ if ($smtpHost === '' || $smtpUsername === '' || $smtpPassword === '' || $smtpPor
 }
 
 $subject = sprintf('[Lista de Interesse] %s - %s', $curso, $nome);
-$body = sprintf("Curso: %s\nNome: %s\nE-mail: %s\nTelefone: %s\nOrigem: %s", $curso, $nome, $email, $telefone, $origem);
+$body = sprintf(
+    "Interesse: %s\nNome: %s\nE-mail: %s\nTelefone: %s\nOrigem: %s\nConsentimento de marketing: %s",
+    $curso,
+    $nome,
+    $email,
+    $telefone,
+    $origem,
+    $marketingConsent ? 'sim' : 'não'
+);
 
 try {
     $mail = new PHPMailer(true);
@@ -115,20 +149,27 @@ try {
     $client = MauticClient::fromEnvironment();
     if ($client->isConfigured()) {
         [$firstname, $lastname] = splitName($nome);
-        $client->upsertContact([
+        $tags = ['lista_espera_' . $interest['type'], 'lista_espera_' . $interest['slug'], 'site-fluxocursos'];
+        if ($interest['type'] === 'curso') {
+            $tags[] = 'lista_espera';
+        }
+        if ($marketingConsent) {
+            $tags[] = 'consentimento_marketing';
+        }
+        $client->upsertContact(array_merge([
             'email' => $email,
             'firstname' => $firstname,
             'lastname' => $lastname,
             'phone' => $telefone,
-            'tags' => ['lista_espera', 'lista_espera_' . sanitizeTag($curso)],
-        ]);
+            'tags' => $tags,
+        ], readUtmAttributes()));
     }
 } catch (Throwable $error) {
     error_log('Falha ao sincronizar lead da lista de interesse: ' . $error->getMessage());
 }
 
 file_put_contents($rateLimitFile, (string) $now, LOCK_EX);
-respond(200, true, 'Inscrição registrada. Avisaremos quando houver nova turma.');
+respond(200, true, 'Inscrição registrada. Avisaremos quando houver novidade.');
 
 function splitName(string $nome): array
 {
@@ -140,9 +181,15 @@ function splitName(string $nome): array
     return [$firstname, implode(' ', $parts)];
 }
 
-function sanitizeTag(string $value): string
+function readUtmAttributes(): array
 {
-    $value = strtolower($value);
-    $value = preg_replace('/[^a-z0-9_-]+/', '-', $value);
-    return trim(preg_replace('/-+/', '-', $value), '-');
+    $attributes = [];
+    foreach (['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'] as $key) {
+        $value = trim((string) ($_POST[$key] ?? ''));
+        if ($value === '' || textLength($value) > 100 || preg_match('/[\r\n]/', $value)) {
+            continue;
+        }
+        $attributes[$key] = $value;
+    }
+    return $attributes;
 }
