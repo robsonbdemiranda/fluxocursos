@@ -112,11 +112,11 @@ O `BUDDYBOSS_SYNC_TOKEN` protege apenas a execução administrativa da importaç
 
 ### Passo 2 - Executar sincronização
 
-Execute somente por `POST`, enviando o token no cabeçalho `Authorization`. Comece com uma amostra em modo de simulação:
+Execute somente por `POST`, enviando o token no cabeçalho `X-Fluxo-Sync-Token`. Esse cabeçalho dedicado evita que proxies removam a credencial. Comece com uma amostra em modo de simulação:
 
 ```powershell
 $token = '<BUDDYBOSS_SYNC_TOKEN>'
-Invoke-RestMethod -Method Post -Uri 'https://fluxocursos.com.br/api/buddyboss-sync.php?dry_run=1&limit=10' -Headers @{ Authorization = "Bearer $token" }
+Invoke-RestMethod -Method Post -Uri 'https://fluxocursos.com.br/api/buddyboss-sync.php?dry_run=1&limit=10' -Headers @{ 'X-Fluxo-Sync-Token' = $token }
 ```
 
 Depois da conferência, retire `dry_run=1` e ajuste o `limit`. Use `offset` para continuar de um ponto específico. O endpoint não retorna e-mails nas amostras de execução.

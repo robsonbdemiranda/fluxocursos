@@ -41,7 +41,11 @@ if ($syncToken === '') {
 
 $authorization = getAuthorizationHeader();
 $prefix = 'Bearer ';
-if (stripos($authorization, $prefix) !== 0 || !hash_equals($syncToken, trim(substr($authorization, strlen($prefix))))) {
+$providedToken = trim((string) ($_SERVER['HTTP_X_FLUXO_SYNC_TOKEN'] ?? ''));
+if ($providedToken === '' && stripos($authorization, $prefix) === 0) {
+    $providedToken = trim(substr($authorization, strlen($prefix)));
+}
+if ($providedToken === '' || !hash_equals($syncToken, $providedToken)) {
     header('WWW-Authenticate: Bearer');
     respond(401, false, 'Nao autorizado.');
 }
