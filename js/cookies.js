@@ -1,47 +1,63 @@
-function cookies(functions) {
-    const container = document.querySelector('.cookies-container');
-    const save = document.querySelector('.cookies-save');
-    if (!container || !save) return null;
+(function () {
+    "use strict";
 
-    let localPref = null;
-    try {
-        localPref = JSON.parse(window.localStorage.getItem('cookies-pref'));
-    } catch (error) {
-        window.localStorage.removeItem('cookies-pref');
-    }
-    if (localPref) activateFunctions(localPref);
+    var container = document.querySelector(".cookies-container");
+    if (!container) return;
 
-    function getFormPref() {
-        return [...document.querySelectorAll('[data-function]')]
-            .filter((el) => el.checked)
-            .map((el) => el.getAttribute('data-function'));
+    function readConsent() {
+        if (window.fluxoConsent && typeof window.fluxoConsent.read === "function") {
+            return window.fluxoConsent.read();
+        }
+        return null;
     }
 
-    function activateFunctions(pref) {
-        pref.forEach((f) => {
-            if (typeof functions[f] === 'function') functions[f]();
+    function writeConsent(preferences) {
+        if (window.fluxoConsent && typeof window.fluxoConsent.save === "function") {
+            return window.fluxoConsent.save(preferences);
+        }
+        return null;
+    }
+
+    function collectPreferences() {
+        var nodes = container.querySelectorAll("[data-function]");
+        var pref = { analytics: false, marketing: false };
+        nodes.forEach(function (node) {
+            if (!node.checked) return;
+            var key = node.getAttribute("data-function");
+            if (key === "analytics") pref.analytics = true;
+            if (key === "marketing") pref.marketing = true;
         });
-        container.style.display = 'none';
-        window.localStorage.setItem('cookies-pref', JSON.stringify(pref));
+        return pref;
     }
 
-    function handleSave() {
-        const pref = getFormPref();
-        activateFunctions(pref);
+    function bindSave() {
+        var save = container.querySelector(".cookies-save");
+        if (!save) return;
+        save.addEventListener("click", function () {
+            var preferences = collectPreferences();
+            writeConsent(preferences);
+            container.style.display = "none";
+            container.setAttribute("aria-hidden", "true");
+        });
     }
 
-    save.addEventListener('click', handleSave);
-}
+    function bindReject() {
+        var reject = container.querySelector(".cookies-reject");
+        if (!reject) return;
+        reject.addEventListener("click", function () {
+            writeConsent({ analytics: false, marketing: false });
+            container.style.display = "none";
+            container.setAttribute("aria-hidden", "true");
+        });
+    }
 
-function marketing() {
-    // Reservado para a ativação de scripts de marketing após o consentimento.
-}
+    var existing = readConsent();
+    if (existing) {
+        container.style.display = "none";
+        container.setAttribute("aria-hidden", "true");
+        return;
+    }
 
-function analytics() {
-    if (typeof window.activateAnalytics === 'function') window.activateAnalytics();
-}
-
-cookies({
-    marketing,
-    analytics,
-});
+    bindSave();
+    bindReject();
+}());

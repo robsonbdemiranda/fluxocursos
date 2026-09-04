@@ -45,35 +45,12 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/blog.css">
 
-    <script>(function (w, d, s, l, i) {
-        w[l] = w[l] || []; w[l].push({
-            'gtm.start': new Date().getTime(), event: 'gtm.js'
-        }); var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-KW5DHT9');</script>
+    <!-- O GTM e o Hotjar sao carregados somente apos consentimento via md/partials/consent-snippet.html. -->
+    <script src="js/consent-loader.js"></script>
 </head>
 
 <body>
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KW5DHT9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-
-    <!--Cookies Container-->
-    <div class="cookies-container">
-        <div class="cookies-content">
-            <h2>Uso de Cookies</h2>
-            <p>Eles são usados para aprimorar a sua experiência. Ao clicar em Salvar e Continuar, você concorda com o
-                uso de cookies para uso de análises e marketing</p>
-            <div class="cookies-pref">
-                <label><input type="checkbox" checked data-function="analytics">Análise de Uso</label>
-                <label><input type="checkbox" checked data-function="marketing">Marketing</label>
-            </div>
-            <button class="cookies-save">Salvar e Continuar</button>
-        </div>
-    </div>
-    <script>window.fluxoTracking = { gtmId: 'GTM-KW5DHT9', hotjarId: 2658836 };</script>
-    <script src="js/tracking.js"></script>
-    <script src="js/cookies.js"></script>
-    <link rel="stylesheet" href="css/cookies.css">
+    <div id="fluxo-consent-placeholder"></div>
 
     <div class="topo-todo">
         <div class="topo">
@@ -467,9 +444,6 @@
 
         document.getElementById('ano-atual').textContent = new Date().getFullYear();
     </script>
-
-    <script type="text/javascript" async
-        src="https://d335luupugsy2.cloudfront.net/js/loader-scripts/b8a77227-42bb-4d69-a25f-44bb97db27a5-loader.js"></script>
 </body>
 
 </html>

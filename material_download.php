@@ -79,13 +79,14 @@ try {
         if ($marketingConsent) {
             $tags[] = 'consentimento_marketing';
         }
-        $client->upsertContact([
+        $utmAttributes = readUtmAttributes();
+        $client->upsertContact(array_merge([
             'email' => $email,
             'firstname' => $firstname,
             'lastname' => $lastname,
             'phone' => $telefone,
             'tags' => $tags,
-        ]);
+        ], $utmAttributes));
     }
 } catch (Throwable $error) {
     error_log('Falha ao sincronizar download no Mautic: ' . $error->getMessage());
@@ -112,4 +113,18 @@ function sanitizeTag(string $value): string
     $value = strtolower($value);
     $value = preg_replace('/[^a-z0-9_-]+/', '-', $value);
     return trim(preg_replace('/-+/', '-', $value), '-');
+}
+
+function readUtmAttributes(): array
+{
+    $keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    $attributes = [];
+    foreach ($keys as $key) {
+        $raw = (string) ($_POST[$key] ?? '');
+        if ($raw === '' || strlen($raw) > 100 || preg_match('/[\r\n]/', $raw)) {
+            continue;
+        }
+        $attributes[$key] = sanitizeTag($raw);
+    }
+    return $attributes;
 }

@@ -16,6 +16,7 @@
         status.textContent = '';
         form.reset();
         inputMaterial.value = material;
+        syncUtmFields();
         form.querySelector('button[type="submit"]').disabled = false;
         modal.classList.add('is-open');
         modal.setAttribute('aria-hidden', 'false');
@@ -25,6 +26,26 @@
     function closeModal() {
         modal.classList.remove('is-open');
         modal.setAttribute('aria-hidden', 'true');
+    }
+
+    function syncUtmFields() {
+        var prefix = 'utm_';
+        var context = window.fluxoFormContext && typeof window.fluxoFormContext.utm === 'function'
+            ? window.fluxoFormContext.utm()
+            : (window.fluxoUtm || {});
+        Object.keys(context || {}).forEach(function (key) {
+            if (key.indexOf(prefix) !== 0) return;
+            var value = context[key];
+            if (value === undefined || value === null) return;
+            var field = form.querySelector('input[name="' + key + '"]');
+            if (!field) {
+                field = document.createElement('input');
+                field.type = 'hidden';
+                field.name = key;
+                form.appendChild(field);
+            }
+            field.value = String(value);
+        });
     }
 
     document.querySelectorAll('.bt-download').forEach(function (button) {
