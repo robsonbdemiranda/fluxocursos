@@ -11,6 +11,11 @@ Lista completa de tags e segmentos para configurar no Mautic após a implantacao
 | Lista de interesse | `lista_espera` | Captura de cursos futuros; mantida para compatibilidade com campanhas existentes |
 | Lista de interesse | `lista_espera_curso` | Captura de cursos futuros |
 | Lista de interesse | `lista_espera_material` | Captura de materiais futuros |
+| Pré-lançamento de livro | `lista_espera_livro_doppler_arterial` | Captura do interesse no livro Doppler Arterial (08/10/2026) |
+| Pré-lançamento de livro | `pre_lancamento_doppler_arterial` | Aplicada somente quando há consentimento de marketing no pré-lançamento do livro Doppler Arterial |
+| Publicação de livro | `livro_carotidas_publicado` | Tag manual enviada quando o livro Carótidas/Vertebrais é lançado para campanhas futuras |
+| Publicação de livro | `livro_venoso_publicado` | Tag manual para campanhas futuras envolvendo o livro Doppler Venoso |
+| Publicação de livro | `livro_doppler_arterial_publicado` | Tag manual para campanhas futuras do livro Doppler Arterial |
 | Lista de interesse | `lista_espera_<slug>` | Captura em `lista_interesse.php` (slug do curso) |
 | Lista de interesse | `site-fluxocursos` | Todas as capturas de cursos e materiais futuros |
 | Download de material | `download_material` | Captura em `material_download.php` |
@@ -50,6 +55,22 @@ Os materiais futuros usam `lista_espera_material` com `lista_espera_cases-clinic
 ### leads_lista_espera_materiais
 - Regra: tag is `lista_espera_material`
 - Uso: avisar quando cases clínicos ou aulas gratuitas forem publicados.
+
+### leads_interesse_cases_clinicos
+- Regra: tag is `lista_espera_cases-clinicos-comentados`
+- Uso: origem da campanha de confirmação imediata de interesse no material Cases Clínicos.
+
+### leads_interesse_aula_gravada
+- Regra: tag is `lista_espera_aula-gravada-doppler`
+- Uso: origem da campanha de confirmação imediata de interesse na Aula Gravada.
+
+### leads_pre_lancamento_doppler_arterial
+- Regra: tag is `lista_espera_livro_doppler_arterial`
+- Uso: preparar a campanha de confirmação e a nutrição de pré-lançamento do livro Doppler Arterial (08/10/2026).
+
+### leads_pre_lancamento_doppler_arterial_optin
+- Regra: tag is `pre_lancamento_doppler_arterial`
+- Uso: campanha de nutrição exclusiva para leads com consentimento de marketing ativo no pré-lançamento.
 
 ### leads_download_tabela_cim
 - Regra: tag is `download_tabela-cim-aric` OR tag is `download_tabela-cim-caps` OR tag is `download_tabela-cim-elsa` OR tag is `download_tabela-cim-mesa`

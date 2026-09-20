@@ -34,19 +34,21 @@ MAUTIC_PUBLIC_CLIENT_SECRET=<Client Secret OAuth2>
 | Formulário de contato | `lead_contato_site`, `site-fluxocursos` |
 | Lista de interesse em curso | `lista_espera`, `lista_espera_curso`, `site-fluxocursos`, `lista_espera_<slug>` |
 | Lista de interesse em material | `lista_espera_material`, `site-fluxocursos`, `lista_espera_<slug>` |
+| Pré-lançamento de livro | `lista_espera_livro_doppler_arterial`, `site-fluxocursos` e `pre_lancamento_doppler_arterial` (somente com opt-in) |
 
 ## Endpoints
 
 - `enviar_email.php` recebe o formulário de contato e sincroniza com o Mautic.
-- `lista_interesse.php` recebe capturas de cursos e materiais em "EM BREVE", exige aceite da Política de Privacidade e sincroniza com o Mautic.
+- `lista_interesse.php` recebe capturas de cursos, materiais futuros e pré-lançamento do livro Doppler Arterial; exige aceite da Política de Privacidade e sincroniza com o Mautic.
 
 ## QA
 
 1. Acesse `https://fluxocursos.com.br/?utm_source=teste` em janela anônima.
 2. Verifique no Mautic, em **Contacts**, se um novo contato apareceu com a tag `site-fluxocursos`.
-3. Em `cursos.html` ou `materiais.html`, abra um modal "EM BREVE" e submeta o formulário.
-4. Confirme se o contato recebeu `lista_espera_<slug>`, a tag de tipo (`lista_espera_curso` ou `lista_espera_material`) e `site-fluxocursos`.
+3. Em `cursos.html`, `materiais.html` ou `livros.html`, abra um modal "EM BREVE" e submeta o formulário.
+4. Confirme se o contato recebeu `lista_espera_<slug>`, a tag de tipo (`lista_espera_curso`, `lista_espera_material` ou `lista_espera_livro_doppler_arterial`) e `site-fluxocursos`.
 5. Confirme que `consentimento_marketing` aparece somente quando o opt-in foi marcado.
+6. Em `livros.html`, a tag `pre_lancamento_doppler_arterial` aparece apenas se o opt-in foi marcado no pré-lançamento.
 
 ## Boas práticas
 

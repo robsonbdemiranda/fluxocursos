@@ -70,6 +70,7 @@ $interests = [
     'Mini-fellowship Doppler' => ['slug' => 'mini-fellowship-doppler', 'type' => 'curso'],
     'Cases Clínicos Comentados' => ['slug' => 'cases-clinicos-comentados', 'type' => 'material'],
     'Aula Gravada de Doppler' => ['slug' => 'aula-gravada-doppler', 'type' => 'material'],
+    'Doppler Arterial — Carótidas, Abdome e Membros (Pré-lançamento)' => ['slug' => 'livro-doppler-arterial', 'type' => 'livro'],
 ];
 if (!isset($interests[$curso])) {
     respond(422, false, 'Interesse inválido.');
@@ -111,7 +112,9 @@ if ($smtpHost === '' || $smtpUsername === '' || $smtpPassword === '' || $smtpPor
     respond(500, false, 'Não foi possível registrar a inscrição. Tente novamente mais tarde.');
 }
 
-$subject = sprintf('[Lista de Interesse] %s - %s', $curso, $nome);
+$subject = $interest['type'] === 'livro'
+    ? sprintf('[Pré-lançamento Livro] %s - %s', $curso, $nome)
+    : sprintf('[Lista de Interesse] %s - %s', $curso, $nome);
 $body = sprintf(
     "Interesse: %s\nNome: %s\nE-mail: %s\nTelefone: %s\nOrigem: %s\nConsentimento de marketing: %s",
     $curso,
@@ -152,6 +155,9 @@ try {
         $tags = ['lista_espera_' . $interest['type'], 'lista_espera_' . $interest['slug'], 'site-fluxocursos'];
         if ($interest['type'] === 'curso') {
             $tags[] = 'lista_espera';
+        }
+        if ($interest['type'] === 'livro' && $marketingConsent) {
+            $tags[] = 'pre_lancamento_doppler_arterial';
         }
         if ($marketingConsent) {
             $tags[] = 'consentimento_marketing';

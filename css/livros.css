@@ -1,0 +1,165 @@
+.livros-main {
+    padding: 48px 0 64px;
+}
+
+.livros-intro {
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.livros-intro h2 {
+    font-family: 'Bebas Neue', cursive;
+    color: #032842;
+    font-size: 2.2em;
+    margin: 0 0 8px;
+}
+
+.livros-intro p {
+    color: #4a4a4a;
+    font-size: 1.05em;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 640px;
+}
+
+.livros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.livro-card {
+    background: #ffffff;
+    border: 1px solid #d4ecee;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+.livro-card:hover,
+.livro-card:focus-within {
+    border-color: #4ebcc2;
+    box-shadow: 0 12px 28px rgba(3, 40, 66, 0.10);
+    transform: translateY(-2px);
+}
+
+.livro-card--pre-lancamento {
+    background: #f5fafb;
+}
+
+.livro-card__capa {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.livro-card__conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.livro-card__badge {
+    align-self: flex-start;
+    background: #4ebcc2;
+    color: #fff;
+    font-size: 0.7em;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.livro-card__badge--pre {
+    background: #dd2210;
+}
+
+.livro-card h3 {
+    font-family: 'Bebas Neue', cursive;
+    color: #032842;
+    font-size: 1.4em;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.livro-card p {
+    color: #4a4a4a;
+    font-size: 0.95em;
+    line-height: 1.55;
+    margin: 0;
+}
+
+.livro-card__cta {
+    margin-top: auto;
+    background: #4ebcc2;
+    border: 1px solid #4ebcc2;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.livro-card__cta:hover,
+.livro-card__cta:focus {
+    background: #032842;
+    color: #fff;
+}
+
+.livros-cta {
+    background: #032842;
+    color: #ffffff;
+    padding: 32px;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.livros-cta h2 {
+    font-family: 'Bebas Neue', cursive;
+    margin: 0 0 8px;
+    font-size: 1.8em;
+}
+
+.livros-cta p {
+    margin: 0 0 16px;
+    font-size: 1em;
+}
+
+.livros-cta__btn {
+    display: inline-block;
+    background: #4ebcc2;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.livros-cta__btn:hover,
+.livros-cta__btn:focus {
+    background: #fff;
+    color: #032842;
+}
+
+@media (max-width: 500px) {
+    .livros-main {
+        padding: 32px 0 48px;
+    }
+
+    .livro-card {
+        padding: 16px;
+    }
+}
