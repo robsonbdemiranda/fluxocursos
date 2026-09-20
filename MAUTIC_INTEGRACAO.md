@@ -56,3 +56,4 @@ MAUTIC_PUBLIC_CLIENT_SECRET=<Client Secret OAuth2>
 - Não usar a conta admin do Mautic como `MAUTIC_PUBLIC_USER`.
 - Revogar credenciais em caso de troca de equipe ou suspeita de vazamento.
 - Revisar mensalmente os contatos com tag `site-fluxocursos` no Mautic.
+- Manter o repositório público somente enquanto não houver dados pessoais reais; ao tornar privado, valide o convite dos colaboradores.
