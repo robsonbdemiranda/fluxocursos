@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manual de Lançamento - Livro Doppler Arterial | Fluxo Cursos</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 24mm 18mm;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            color: #253746;
+            margin: 0;
+            line-height: 1.55;
+            background: #f3f6f8;
+        }
+        .manual {
+            max-width: 880px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 48px 56px;
+            box-shadow: 0 8px 28px rgba(3, 40, 66, 0.10);
+        }
+        header.cover {
+            background: #032842;
+            color: #ffffff;
+            padding: 56px 48px;
+            border-radius: 12px;
+            margin-bottom: 36px;
+            text-align: center;
+        }
+        header.cover img {
+            width: 220px;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        header.cover h1 {
+            font-size: 28px;
+            margin: 0 0 12px;
+            letter-spacing: 0.5px;
+        }
+        header.cover p {
+            margin: 0;
+            font-size: 14px;
+            color: #c4d2dc;
+        }
+        h1, h2, h3 {
+            color: #032842;
+        }
+        h1 {
+            font-size: 26px;
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 20px;
+            border-bottom: 2px solid #4ebcc2;
+            padding-bottom: 4px;
+            margin-top: 36px;
+        }
+        h3 {
+            font-size: 16px;
+            margin-top: 24px;
+        }
+        p {
+            margin: 0 0 12px;
+            font-size: 14px;
+        }
+        ul, ol {
+            margin: 0 0 16px 20px;
+            font-size: 14px;
+        }
+        li {
+            margin-bottom: 4px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        th, td {
+            border: 1px solid #d4ecee;
+            padding: 8px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background: #eaf6f7;
+            color: #032842;
+        }
+        code {
+            background: #eaf6f7;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #d4ecee;
+            margin: 32px 0;
+        }
+        .footer {
+            margin-top: 48px;
+            padding-top: 16px;
+            border-top: 1px solid #d4ecee;
+            font-size: 12px;
+            color: #5c6d78;
+            text-align: center;
+        }
+        .print-note {
+            background: #fff7e1;
+            border: 1px solid #f6c66d;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #6b4a06;
+            margin-bottom: 24px;
+        }
+        @media print {
+            body {
+                background: #ffffff;
+            }
+            .manual {
+                box-shadow: none;
+                padding: 0;
+            }
+            .print-note {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="manual">
+        <header class="cover">
+            <img src="https://fluxocursos.com.br/image/01-FLUXO-LOGO.png" alt="Fluxo Cursos">
+            <h1>Manual de Lançamento - Livro Doppler Arterial</h1>
+            <p>Cliente: Fluxo Cursos | Agência parceira: GRID Estratégia | Setembro de 2026</p>
+        </header>
+
+        <div class="print-note">
+            Para gerar o PDF: abra este arquivo no navegador, pressione Ctrl + P, escolha "Salvar como PDF" e marque "Gráficos de fundo".
+        </div>
+
+        <section>
+            <h1>Resumo executivo</h1>
+            <p>O objetivo do fluxo é construir uma audiência engajada antes do lançamento e converter parte dela em compradores do livro ou alunos dos cursos da Fluxo Cursos.</p>
+            <p>A operação combina uma página dedicada (<code>livros.html</code>), tags e segmentos organizados no Mautic, três e-mails triggered com layout padronizado e três campanhas coordenadas por data.</p>
+            <p>Toda a infraestrutura é rastreável por UTMs e respeita o consentimento de marketing (LGPD).</p>
+        </section>
+
+        <section>
+            <h1>Cronograma</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Marco</th>
+                        <th>Data</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Publicação da página <code>livros.html</code></td>
+                        <td>19/09/2026</td>
+                        <td>Cards com capas reais dos livros e botão "Quero ser avisado" para o pré-lançamento</td>
+                    </tr>
+                    <tr>
+                        <td>Captação ativa</td>
+                        <td>19/09 a 07/10/2026</td>
+                        <td>Formulário do site coleta leads com tag automática</td>
+                    </tr>
+                    <tr>
+                        <td>Campanha de confirmação</td>
+                        <td>Imediata após captura</td>
+                        <td>Confirmação do pré-lançamento</td>
+                    </tr>
+                    <tr>
+                        <td>Campanha de nutrição</td>
+                        <td>A cada novo lead</td>
+                        <td>Sequência de 3 e-mails (imediato + 2 dias + 5 dias)</td>
+                    </tr>
+                    <tr>
+                        <td>Campanha de lançamento</td>
+                        <td>08/10/2026 às 10h</td>
+                        <td>E-mail de disponibilidade com CTA de compra</td>
+                    </tr>
+                    <tr>
+                        <td>Pós-lançamento</td>
+                        <td>09/10 em diante</td>
+                        <td>Onboarding do livro nas campanhas já existentes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h1>Página <code>livros.html</code></h1>
+            <ul>
+                <li>Três livros em destaque: Doppler de Carótidas e Vertebrais (2018), Doppler Venoso (2024) e o pré-lançamento do Doppler Arterial.</li>
+                <li>Apenas o terceiro livro exibe o botão Quero ser avisado.</li>
+                <li>O formulário é o mesmo do fluxo de materiais (modal único com <code>js/lista-interesse.js</code>).</li>
+                <li>Aceita a Política de Privacidade e opt-in de marketing.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>Captura de leads</h1>
+            <ul>
+                <li>Endpoint: <code>lista_interesse.php</code>.</li>
+                <li>Campos obrigatórios: nome, e-mail, aceite de privacidade.</li>
+                <li>Campos opcionais: telefone, opt-in de marketing.</li>
+                <li>Honeypot: <code>website</code>.</li>
+                <li>Origem fixa: <code>livros</code>.</li>
+                <li>Rate limit: 60 segundos por IP + curso.</li>
+                <li>Sincronização com o Mautic via OAuth2 Client Credentials.</li>
+                <li>UTMs da sessão são propagados e adicionados como atributos do contato no Mautic via endpoint <code>/api/contacts/{id}/utm/add</code>.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>Tags no Mautic</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Origem</th>
+                        <th>Quando aplicar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>lista_espera_livro_doppler_arterial</code></td><td>automática</td><td>Captura no formulário</td></tr>
+                    <tr><td><code>pre_lancamento_doppler_arterial</code></td><td>automática</td><td>Apenas com opt-in de marketing</td></tr>
+                    <tr><td><code>livro_carotidas_publicado</code></td><td>manual</td><td>Quando o livro for lançado para futuras campanhas</td></tr>
+                    <tr><td><code>livro_venoso_publicado</code></td><td>manual</td><td>Idem para o livro Doppler Venoso</td></tr>
+                    <tr><td><code>livro_doppler_arterial_publicado</code></td><td>manual</td><td>No dia 08/10/2026 para disparar o lançamento</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h1>Segmentos no Mautic</h1>
+            <h2>Categoria: Leads de Cursos</h2>
+            <ul>
+                <li><code>leads_interesse_cases_clinicos</code> - tag inclui <code>lista_espera_cases-clinicos-comentados</code>.</li>
+                <li><code>leads_interesse_aula_gravada</code> - tag inclui <code>lista_espera_aula-gravada-doppler</code>.</li>
+                <li><code>leads_lista_espera_materiais</code> - tag inclui <code>lista_espera_material</code>.</li>
+                <li><code>leads_lista_espera_cursos</code> - tag inclui <code>lista_espera_curso</code>.</li>
+                <li><code>leads_download_tabela_cim</code> - tag inclui <code>download_tabela-cim-*</code>.</li>
+                <li><code>leads_download_tabela_cim_optin</code> - <code>consentimento_marketing</code> e <code>download_tabela-cim-*</code>.</li>
+            </ul>
+            <h2>Categoria: Leads de Livros</h2>
+            <ul>
+                <li><code>leads_pre_lancamento_doppler_arterial</code> - tag inclui <code>lista_espera_livro_doppler_arterial</code>.</li>
+                <li><code>leads_pre_lancamento_doppler_arterial_optin</code> - <code>lista_espera_livro_doppler_arterial</code> e <code>pre_lancamento_doppler_arterial</code>.</li>
+                <li><code>leads_livro_carotidas_publicado</code> - tag inclui <code>livro_carotidas_publicado</code>.</li>
+                <li><code>leads_livro_venoso_publicado</code> - tag inclui <code>livro_venoso_publicado</code>.</li>
+                <li><code>leads_livro_doppler_arterial_publicado</code> - tag inclui <code>livro_doppler_arterial_publicado</code>.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>E-mails triggered</h1>
+            <p>Todos usam o layout base <code>md/emails/confirmacao-interesse-material.html</code>, com logotipo, CTA verde e link de descadastro.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>E-mail</th>
+                        <th>Origem</th>
+                        <th>Função</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Confirmação - Pré-lançamento Doppler Arterial</td><td><code>md/emails/confirmacao-interesse-material.html</code></td><td>Confirmar o interesse do lead</td></tr>
+                    <tr><td>Nutrição - Conteúdo técnico</td><td><code>md/emails/nutricao-conteudo-tecnico.html</code></td><td>Apresentar materiais técnicos e PDFs</td></tr>
+                    <tr><td>Nutrição - Conheça os cursos</td><td>a ser criado</td><td>Indicar cursos da Fluxo Cursos</td></tr>
+                    <tr><td>Lançamento - Doppler Arterial</td><td><code>md/emails/lancamento-doppler-arterial.html</code></td><td>Notificar a publicação do livro</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h1>Campanhas no Mautic</h1>
+            <h2>Confirmação imediata</h2>
+            <ul>
+                <li><strong>Categoria</strong>: Leads de Livros.</li>
+                <li><strong>Contact source</strong>: <code>leads_pre_lancamento_doppler_arterial</code>.</li>
+                <li><strong>Builder</strong>: Segmento + ação Send Email para o e-mail de confirmação.</li>
+                <li><strong>Execução</strong>: imediata.</li>
+                <li><strong>Published</strong>: Não até validação.</li>
+            </ul>
+            <h2>Nutrição com opt-in</h2>
+            <ul>
+                <li><strong>Categoria</strong>: Leads de Livros.</li>
+                <li><strong>Contact source</strong>: <code>leads_pre_lancamento_doppler_arterial_optin</code>.</li>
+                <li><strong>Builder</strong>: Segmento + três ações Send Email em sequência (imediato, 2 dias, 5 dias).</li>
+                <li><strong>Execução</strong>: imediata após captura.</li>
+                <li><strong>Published</strong>: Sim, durante todo o pré-lançamento.</li>
+            </ul>
+            <h2>Lançamento</h2>
+            <ul>
+                <li><strong>Categoria</strong>: Leads de Livros.</li>
+                <li><strong>Contact source</strong>: <code>leads_pre_lancamento_doppler_arterial</code>.</li>
+                <li><strong>Builder</strong>: Segmento + Condition by Tags (tag <code>livro_doppler_arterial_publicado</code>) + Send Email com o e-mail de lançamento.</li>
+                <li><strong>Execução</strong>: <em>at a specific date/time</em> em 08/10/2026 às 10h.</li>
+                <li><strong>Published</strong>: Não até o dia do lançamento. Aplicar manualmente a tag aos contatos do segmento <code>leads_pre_lancamento_doppler_arterial</code> antes de publicar.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>Operação no dia 08/10/2026</h1>
+            <ol>
+                <li>Aplicar manualmente a tag <code>livro_doppler_arterial_publicado</code> aos contatos do segmento Leads pré-lançamento Doppler Arterial.</li>
+                <li>Publicar a campanha Lançamento - Doppler Arterial.</li>
+                <li>Acompanhar os eventos da campanha para confirmar o envio do e-mail de lançamento.</li>
+                <li>Atualizar o card do livro em <code>livros.html</code> removendo o badge Pré-lançamento e adicionando o CTA Comprar na DiLivros.</li>
+            </ol>
+        </section>
+
+        <section>
+            <h1>Pontos de atenção</h1>
+            <ul>
+                <li>O site <code>dr.-robson-vascular</code> é um submódulo sem <code>.gitmodules</code>. Mudanças internas lá não são versionadas neste repositório principal.</li>
+                <li>O repositório está atualmente público. Ao tornar privado, confirme os colaboradores e revise os templates de e-mail.</li>
+                <li>O layout de e-mail depende do logotipo <code>https://fluxocursos.com.br/image/01-FLUXO-LOGO.png</code>. Não renomeie essa imagem.</li>
+                <li>O endpoint <code>lista_interesse.php</code> requer <code>MAUTIC_BASE_URL</code>, <code>MAUTIC_PUBLIC_CLIENT_ID</code> e <code>MAUTIC_PUBLIC_CLIENT_SECRET</code> configurados no servidor. O SMTP também deve estar operacional.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>Recursos úteis</h1>
+            <ul>
+                <li>Repositório: https://github.com/robsonbdemiranda/fluxocursos</li>
+                <li>Documentos internos: <code>MAUTIC_INTEGRACAO.md</code>, <code>MAUTIC_TAGS_E_SEGMENTOS.md</code>, <code>COOKIES_E_TRACKING.md</code>, <code>SEMANA_4_COMUNIDADE.md</code>.</li>
+                <li>Templates de e-mail: <code>md/emails/*.html</code>.</li>
+                <li>Layout da página de livros: <code>livros.html</code> e <code>css/livros.css</code>.</li>
+            </ul>
+        </section>
+
+        <div class="footer">
+            <p>Contato técnico: Equipe Fluxo Cursos | Agência parceira: GRID Estratégia</p>
+        </div>
+    </div>
+</body>
+</html>
