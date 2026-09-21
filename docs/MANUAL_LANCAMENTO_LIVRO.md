@@ -117,20 +117,6 @@ Todos usam o layout base `md/emails/confirmacao-interesse-material.html`, com lo
 3. Acompanhar os eventos da campanha para confirmar o envio do e-mail de lançamento.
 4. Atualizar o card do livro em `livros.html` removendo o badge **Pré-lançamento** e adicionando o CTA **Comprar na DiLivros**.
 
-## 10. Pontos de atenção
-
-- O site `dr.-robson-vascular` é um submódulo sem `.gitmodules`. Mudanças internas lá não são versionadas neste repositório principal.
-- O repositório está atualmente público. Ao tornar privado, confirme os colaboradores e revise os templates de e-mail.
-- O layout de e-mail depende do logotipo `https://fluxocursos.com.br/image/01-FLUXO-LOGO.png`. Não renomeie essa imagem.
-- O endpoint `lista_interesse.php` requer `MAUTIC_BASE_URL`, `MAUTIC_PUBLIC_CLIENT_ID` e `MAUTIC_PUBLIC_CLIENT_SECRET` configurados no servidor. O SMTP também deve estar operacional.
-
-## 11. Recursos úteis
-
-- Repositório: https://github.com/robsonbdemiranda/fluxocursos
-- Documentos internos: `MAUTIC_INTEGRACAO.md`, `MAUTIC_TAGS_E_SEGMENTOS.md`, `COOKIES_E_TRACKING.md`, `SEMANA_4_COMUNIDADE.md`.
-- Templates de e-mail: `md/emails/*.html`.
-- Layout da página de livros: `livros.html` e `css/livros.css`.
-
 ---
 
 **Contato técnico:** Equipe Fluxo Cursos
