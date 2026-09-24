@@ -70,7 +70,7 @@ $interests = [
     'Mini-fellowship Doppler' => ['slug' => 'mini-fellowship-doppler', 'type' => 'curso'],
     'Cases Clínicos Comentados' => ['slug' => 'cases-clinicos-comentados', 'type' => 'material'],
     'Aula Gravada de Doppler' => ['slug' => 'aula-gravada-doppler', 'type' => 'material'],
-    'Doppler Arterial — Carótidas, Abdome e Membros (Pré-lançamento)' => ['slug' => 'livro-doppler-arterial', 'type' => 'livro'],
+    'Doppler Arterial — Carótidas, Abdome e Membros (Pré-lançamento)' => ['slug' => 'livro_doppler_arterial', 'type' => 'livro'],
 ];
 if (!isset($interests[$curso])) {
     respond(422, false, 'Interesse inválido.');
